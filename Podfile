@@ -12,5 +12,4 @@ target 'CitySensors' do
   pod 'RxCocoa', '~> 4.0'
   pod 'RxSwift', '~> 4.0'
   pod 'SwifterSwift', '~> 4.0'
-  pod 'SwiftyJSON', '~> 4.0'
 end

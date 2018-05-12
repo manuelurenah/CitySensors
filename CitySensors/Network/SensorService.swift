@@ -48,25 +48,11 @@ extension SensorService: TargetType {
         }
     }
 
-    var parameters: [String: Any]? {
+    var task: Task {
         switch self {
         case .getSensors(let parameters),
              .getLiveSensorData(let parameters):
-            return parameters
-        }
-    }
-
-    var parameterEncoding: ParameterEncoding {
-        switch self {
-        case .getSensors, .getLiveSensorData:
-            return URLEncoding.queryString
-        }
-    }
-
-    var task: Task {
-        switch self {
-        case .getSensors, .getLiveSensorData:
-            return .requestPlain
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
         }
     }
 }

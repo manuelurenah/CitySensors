@@ -9,7 +9,6 @@
 import Foundation
 import Alamofire
 import Moya
-import SwiftyJSON
 
 class ApiHandler {
     static let provider = MoyaProvider<SensorService>()
@@ -19,9 +18,16 @@ class ApiHandler {
             switch event {
             case let .success(response):
                 do {
-                    let results = try JSON(data: response.data) as! [Sensor]
+                    let decoder = JSONDecoder()
+                    decoder.nonConformingFloatDecodingStrategy = .convertFromString(
+                        positiveInfinity: "+Infinity",
+                        negativeInfinity: "-Infinity",
+                        nan: "NaN"
+                    )
 
-                    onSuccess(results)
+                    let sensors = try decoder.decode([Sensor].self, from: response.data)
+
+                    onSuccess(sensors)
                 } catch let error {
                     onError(error)
                 }

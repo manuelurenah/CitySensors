@@ -30,7 +30,6 @@ PODS:
   - SwifterSwift/MapKit (4.3.0)
   - SwifterSwift/SwiftStdlib (4.3.0)
   - SwifterSwift/UIKit (4.3.0)
-  - SwiftyJSON (4.1.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.0)
@@ -41,7 +40,6 @@ DEPENDENCIES:
   - RxCocoa (~> 4.0)
   - RxSwift (~> 4.0)
   - SwifterSwift (~> 4.0)
-  - SwiftyJSON (~> 4.0)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -53,7 +51,6 @@ SPEC REPOS:
     - RxCocoa
     - RxSwift
     - SwifterSwift
-    - SwiftyJSON
 
 EXTERNAL SOURCES:
   ChameleonFramework:
@@ -74,8 +71,7 @@ SPEC CHECKSUMS:
   RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
   RxSwift: e49536837d9901277638493ea537394d4b55f570
   SwifterSwift: f3fce2b9fc5b9d8fda6eec33825e5243c60aebba
-  SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
 
-PODFILE CHECKSUM: 0202db651c18779916c3bb7b01605c9d33099032
+PODFILE CHECKSUM: 95acbce50ac0fac81e1acc797e2c3b7f2e75bb67
 
 COCOAPODS: 1.5.0

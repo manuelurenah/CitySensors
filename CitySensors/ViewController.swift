@@ -7,12 +7,24 @@
 //
 
 import UIKit
+import Alamofire
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
+        let parameters: Parameters = [
+            "api_key": APIConfig.API_KEY,
+        ]
+
+        print("getting data...")
+        ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
+            print("Here's what I got")
+            print(sensors)
+        }, onError: { error in
+            print(error)
+        })
     }
 
     override func didReceiveMemoryWarning() {
