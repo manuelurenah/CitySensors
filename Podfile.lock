@@ -11,6 +11,7 @@ PODS:
   - Moya/RxSwift (11.0.2):
     - Moya/Core
     - RxSwift (~> 4.0)
+  - PKHUD (5.0.0)
   - Result (3.2.4)
   - RxCocoa (4.1.2):
     - RxSwift (~> 4.0)
@@ -37,6 +38,7 @@ DEPENDENCIES:
   - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`)
   - DateToolsSwift (~> 4.0)
   - Moya/RxSwift (~> 11.0)
+  - PKHUD (~> 5.0)
   - RxCocoa (~> 4.0)
   - RxSwift (~> 4.0)
   - SwifterSwift (~> 4.0)
@@ -47,6 +49,7 @@ SPEC REPOS:
     - ARCL
     - DateToolsSwift
     - Moya
+    - PKHUD
     - Result
     - RxCocoa
     - RxSwift
@@ -67,11 +70,12 @@ SPEC CHECKSUMS:
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   DateToolsSwift: 875d97ff9e3a5d54abdd67a269b3f51c757b71ab
   Moya: a725035953bc1c0eb1be505ab903984501d82440
+  PKHUD: 3c001512c6e002091184197a8de7a20420786e3b
   Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
   RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
   RxSwift: e49536837d9901277638493ea537394d4b55f570
   SwifterSwift: f3fce2b9fc5b9d8fda6eec33825e5243c60aebba
 
-PODFILE CHECKSUM: 95acbce50ac0fac81e1acc797e2c3b7f2e75bb67
+PODFILE CHECKSUM: 9a92b160e1987bfbff4c66ba6c081b52ee18ecdf
 
 COCOAPODS: 1.5.0

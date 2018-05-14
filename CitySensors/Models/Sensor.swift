@@ -11,16 +11,16 @@ import Foundation
 // MARK: - Sensor struct Model
 struct Sensor: Codable {
     struct Geometry: Codable {
-        let coordinates: [Double]?
-        let type: String?
+        let coordinates: [Double]
+        let type: String
     }
 
     struct Source: Codable {
-        let fancyName: String?
+        let fancyName: String
         let document: String?
         let thirdParty: Bool?
-        let dbName: String?
-        let webDisplayName: String?
+        let dbName: String
+        let webDisplayName: String
 
         private enum CodingKeys: String, CodingKey {
             case fancyName = "fancy_name"
@@ -33,24 +33,24 @@ struct Sensor: Codable {
 
     struct Value: Codable {
         struct Meta: Codable {
-            let units: String?
-            let name: String?
-            let theme: String?
+            let units: String
+            let name: String
+            let theme: String
         }
 
-        let data: [String:Float]?
-        let meta: Meta?
+        let data: [String:Float]
+        let meta: Meta
     }
 
-    let latestReading: String?
-    let geometry: Geometry?
-    let active: String?
-    let type: String?
-    let source: Source?
-    let data: [String:Value]?
-    let baseHeight: String?
-    let sensorHeight: String?
-    let name: String?
+    let latestReading: String
+    let geometry: Geometry
+    let active: String
+    let type: String
+    let source: Source
+    let data: [String:Value]
+    let baseHeight: String
+    let sensorHeight: String
+    let name: String
 
     private enum CodingKeys: String, CodingKey {
         case latestReading = "latest"
