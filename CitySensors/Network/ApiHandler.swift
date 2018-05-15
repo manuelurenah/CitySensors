@@ -9,9 +9,11 @@
 import Foundation
 import Alamofire
 import Moya
+import RxSwift
 
 class ApiHandler {
     static let provider = MoyaProvider<SensorService>()
+    static let disposeBag = DisposeBag()
 
     static func getLiveSensorData(with parameters: Parameters, onSuccess: @escaping ([Sensor])->(), onError: @escaping (Error)->()) {
         provider.rx.request(.getLiveSensorData(parameters: parameters)).subscribe { event in
@@ -34,6 +36,6 @@ class ApiHandler {
             case let .error(error):
                 onError(error)
             }
-        }
+        }.disposed(by: disposeBag)
     }
 }

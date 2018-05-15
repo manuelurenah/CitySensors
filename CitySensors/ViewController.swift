@@ -7,33 +7,38 @@
 //
 
 import UIKit
+import CoreLocation
 import Alamofire
 import PKHUD
+import SwifterSwift
 
 class ViewController: UITableViewController {
 
     @IBOutlet weak var refreshButton: UIBarButtonItem!
 
+    @IBAction func refreshButtonTap(_ sender: UIBarButtonItem) {
+        if CLLocationManager.locationServicesEnabled() {
+            HUD.show(.progress, onView: self.navigationController?.view)
+            locationManager.requestLocation()
+        }
+    }
+
+    let locationManager = CLLocationManager()
     var sensors = [Sensor]()
     let cellIdentifier = "SensorCell"
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        HUD.show(.progress, onView: self.tableView)
+        locationManager.requestWhenInUseAuthorization()
 
-        let parameters: Parameters = [
-            "api_key": APIConfig.API_KEY,
-        ]
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.requestLocation()
+        }
 
-        ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
-            self.sensors = sensors
-            HUD.hide()
-
-            self.tableView.reloadData()
-        }, onError: { error in
-            print(error)
-        })
+        HUD.show(.progress, onView: self.navigationController?.view)
     }
 
     override func didReceiveMemoryWarning() {
@@ -55,9 +60,39 @@ class ViewController: UITableViewController {
         let mainReading = sensor.data.first
         let detail = "Latest Record: \(sensor.latestReading) - Value: \(String(describing: mainReading!.value.data.first!.value)) \(String(describing: mainReading!.value.meta.units))"
 
-        cell.textLabel?.text = sensor.source.fancyName
+        cell.textLabel?.text = sensor.source.webDisplayName
         cell.detailTextLabel?.text = detail
 
         return cell
+    }
+}
+
+extension ViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let currentLocation = locations.first else { return }
+
+        let parameters: Parameters = [
+            "api_key": APIConfig.API_KEY,
+            "buffer": "\(currentLocation.coordinate.longitude),\(currentLocation.coordinate.latitude),\(Constants.DEFAULT_RADIUS)",
+            "sensor_type": ["Environmental", "Traffic", "Weather"].joined(separator: "-and-"),
+        ]
+
+        ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
+            self.sensors = sensors
+            HUD.hide()
+
+            self.tableView.reloadData()
+        }, onError: { error in
+            let alertController = UIAlertController(title: "Unexpected Error", message: "An Unexpected error occurred, please try again", defaultActionButtonTitle: "Ok", tintColor: UIColor.blue)
+
+            HUD.hide()
+            alertController.show(animated: true, vibrate: false, completion: nil)
+
+            print(error)
+        })
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
     }
 }
