@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,11 +19,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SensorCell" textLabel="0AD-Ja-NBT" detailTextLabel="OeB-fj-fCC" style="IBUITableViewCellStyleSubtitle" id="YVb-Tf-Elc">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="SensorCell" textLabel="0AD-Ja-NBT" detailTextLabel="OeB-fj-fCC" style="IBUITableViewCellStyleSubtitle" id="YVb-Tf-Elc">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YVb-Tf-Elc" id="H6S-ZC-L4c">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0AD-Ja-NBT">
@@ -41,6 +42,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="ppB-q2-EZW" kind="show" id="Qis-Q8-qEn"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
@@ -63,6 +67,64 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="weG-Qd-U9v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1799.2" y="108.39580209895054"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="gMB-E4-svv">
+            <objects>
+                <viewController id="ppB-q2-EZW" customClass="ARViewController" customModule="CitySensors" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="pIb-m5-beK">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NQq-PJ-k4i">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </arscnView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="NQq-PJ-k4i" firstAttribute="leading" secondItem="dKT-8f-kVP" secondAttribute="leading" id="1FT-Fj-6IE"/>
+                            <constraint firstItem="NQq-PJ-k4i" firstAttribute="trailing" secondItem="dKT-8f-kVP" secondAttribute="trailing" id="DgN-PC-bvl"/>
+                            <constraint firstItem="NQq-PJ-k4i" firstAttribute="top" secondItem="pIb-m5-beK" secondAttribute="top" id="Fi5-u9-Gpt"/>
+                            <constraint firstItem="NQq-PJ-k4i" firstAttribute="bottom" secondItem="dKT-8f-kVP" secondAttribute="bottom" id="S0D-jb-kIa"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="dKT-8f-kVP"/>
+                    </view>
+                    <connections>
+                        <outlet property="sceneView" destination="NQq-PJ-k4i" id="scJ-SX-T1U"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LKd-Of-hQD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2732" y="108.39580209895054"/>
+        </scene>
+        <!--Sprite Kit View Controller-->
+        <scene sceneID="7Ky-Zk-htw">
+            <objects>
+                <viewController id="baS-VW-0z8" customClass="SpriteKitViewController" customModule="CitySensors" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xiC-9w-41T">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arskView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XfL-bc-KaO">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </arskView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="XfL-bc-KaO" firstAttribute="top" secondItem="xiC-9w-41T" secondAttribute="top" id="EV7-td-Cxu"/>
+                            <constraint firstItem="XfL-bc-KaO" firstAttribute="bottom" secondItem="PCa-BN-5CZ" secondAttribute="bottom" id="UTn-FT-9jc"/>
+                            <constraint firstItem="XfL-bc-KaO" firstAttribute="trailing" secondItem="PCa-BN-5CZ" secondAttribute="trailing" id="bF1-vL-FQP"/>
+                            <constraint firstItem="XfL-bc-KaO" firstAttribute="leading" secondItem="PCa-BN-5CZ" secondAttribute="leading" id="xZp-FI-eg5"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="PCa-BN-5CZ"/>
+                    </view>
+                    <connections>
+                        <outlet property="sceneView" destination="XfL-bc-KaO" id="ANz-3n-sj3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Z9v-Vu-hvT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3696.8000000000002" y="108.39580209895054"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ETG-LS-5zR">

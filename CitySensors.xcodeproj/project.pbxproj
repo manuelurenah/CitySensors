@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8D26A39A20A35C2D009E66F2 /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 8D26A39920A35C2D009E66F2 /* .gitkeep */; };
+		8D4770B320AC393000934AE0 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4770B220AC393000934AE0 /* ARViewController.swift */; };
 		8D5C66C220A464D200A4E805 /* Sensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C120A464D200A4E805 /* Sensor.swift */; };
 		8D5C66C420A4680B00A4E805 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C320A4680B00A4E805 /* Constants.swift */; };
 		8DBC498B20A24757006756C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC498A20A24757006756C3 /* AppDelegate.swift */; };
@@ -15,6 +16,7 @@
 		8DBC499020A24757006756C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8DBC498E20A24757006756C3 /* Main.storyboard */; };
 		8DBC499220A24758006756C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8DBC499120A24758006756C3 /* Assets.xcassets */; };
 		8DBC499520A24758006756C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8DBC499320A24758006756C3 /* LaunchScreen.storyboard */; };
+		8DD8A0A620ACD6FE0037BEC9 /* SpriteKitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD8A0A520ACD6FE0037BEC9 /* SpriteKitViewController.swift */; };
 		8DE2EBC420A4FF6200B94D0F /* ApiHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE2EBC320A4FF6200B94D0F /* ApiHandler.swift */; };
 		8DEF4C3E20A49075009E3791 /* SensorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF4C3D20A49075009E3791 /* SensorService.swift */; };
 		D8CE3A40AC46477E7FECDB8A /* Pods_CitySensors.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD62C864D1D26E6B1D5AAAF1 /* Pods_CitySensors.framework */; };
@@ -23,6 +25,7 @@
 /* Begin PBXFileReference section */
 		1501DA499FD90DF5AB36ECD8 /* Pods-CitySensors.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CitySensors.release.xcconfig"; path = "Pods/Target Support Files/Pods-CitySensors/Pods-CitySensors.release.xcconfig"; sourceTree = "<group>"; };
 		8D26A39920A35C2D009E66F2 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		8D4770B220AC393000934AE0 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
 		8D5C66C120A464D200A4E805 /* Sensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sensor.swift; sourceTree = "<group>"; };
 		8D5C66C320A4680B00A4E805 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		8DBC498720A24757006756C3 /* CitySensors.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CitySensors.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -32,6 +35,7 @@
 		8DBC499120A24758006756C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8DBC499420A24758006756C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8DBC499620A24758006756C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8DD8A0A520ACD6FE0037BEC9 /* SpriteKitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteKitViewController.swift; sourceTree = "<group>"; };
 		8DE2EBC320A4FF6200B94D0F /* ApiHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiHandler.swift; sourceTree = "<group>"; };
 		8DEF4C3D20A49075009E3791 /* SensorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorService.swift; sourceTree = "<group>"; };
 		CD62C864D1D26E6B1D5AAAF1 /* Pods_CitySensors.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CitySensors.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,6 +116,7 @@
 		8DBC498920A24757006756C3 /* CitySensors */ = {
 			isa = PBXGroup;
 			children = (
+				8D4770B220AC393000934AE0 /* ARViewController.swift */,
 				8DBC498C20A24757006756C3 /* ViewController.swift */,
 				8DBC499120A24758006756C3 /* Assets.xcassets */,
 				8D1B068220A26874007FAC3E /* Helpers */,
@@ -121,6 +126,7 @@
 				8DEF4C4120A493F4009E3791 /* Resources */,
 				8DEF4C4020A493EE009E3791 /* Supporting */,
 				8D1B068120A26869007FAC3E /* ViewModels */,
+				8DD8A0A520ACD6FE0037BEC9 /* SpriteKitViewController.swift */,
 			);
 			path = CitySensors;
 			sourceTree = "<group>";
@@ -128,8 +134,8 @@
 		8DEF4C3C20A49061009E3791 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				8DEF4C3D20A49075009E3791 /* SensorService.swift */,
 				8DE2EBC320A4FF6200B94D0F /* ApiHandler.swift */,
+				8DEF4C3D20A49075009E3791 /* SensorService.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -290,11 +296,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D4770B320AC393000934AE0 /* ARViewController.swift in Sources */,
 				8DBC498D20A24757006756C3 /* ViewController.swift in Sources */,
 				8DE2EBC420A4FF6200B94D0F /* ApiHandler.swift in Sources */,
 				8D5C66C220A464D200A4E805 /* Sensor.swift in Sources */,
 				8DBC498B20A24757006756C3 /* AppDelegate.swift in Sources */,
 				8DEF4C3E20A49075009E3791 /* SensorService.swift in Sources */,
+				8DD8A0A620ACD6FE0037BEC9 /* SpriteKitViewController.swift in Sources */,
 				8D5C66C420A4680B00A4E805 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

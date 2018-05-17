@@ -41,11 +41,6 @@ class ViewController: UITableViewController {
         HUD.show(.progress, onView: self.navigationController?.view)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -64,6 +59,13 @@ class ViewController: UITableViewController {
         cell.detailTextLabel?.text = detail
 
         return cell
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let destinationViewController = segue.destination as? ARViewController,
+            let indexPath = self.tableView.indexPathForSelectedRow
+        else { return }
+        destinationViewController.sensor = sensors[indexPath.row]
     }
 }
 

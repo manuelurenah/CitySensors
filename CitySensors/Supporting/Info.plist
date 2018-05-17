@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Please allow permission to use the camera to present information in AR</string>
 	<key>NSLocationUsageDescription</key>
 	<string>Please allow permission of your location to point you where are the nearest sensors around you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -30,10 +32,10 @@
 		<dict>
 			<key>uoweb1.ncl.ac.uk</key>
 			<dict>
-                <key>NSIncludesSubdomains</key>
-                <true/>
-                <key>NSExceptionAllowsInsecureHTTPLoads</key>
-                <true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
 			</dict>
 		</dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -45,6 +47,7 @@
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
+		<string>arkit</string>
 		<string>armv7</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
