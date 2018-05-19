@@ -33,7 +33,6 @@ PODS:
   - SwifterSwift/UIKit (4.3.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.0)
   - ARCL (~> 1.0)
   - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`)
   - DateToolsSwift (~> 4.0)
@@ -76,6 +75,6 @@ SPEC CHECKSUMS:
   RxSwift: e49536837d9901277638493ea537394d4b55f570
   SwifterSwift: f3fce2b9fc5b9d8fda6eec33825e5243c60aebba
 
-PODFILE CHECKSUM: 9a92b160e1987bfbff4c66ba6c081b52ee18ecdf
+PODFILE CHECKSUM: 76bdc799fae02122636c74f1535ab7a1464828ae
 
 COCOAPODS: 1.5.0

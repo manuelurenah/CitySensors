@@ -4,7 +4,6 @@ platform :ios, '11.0'
 use_frameworks!
 
 target 'CitySensors' do
-  pod 'Alamofire', '~> 4.0'
   pod 'ARCL', '~> 1.0'
   pod 'ChameleonFramework/Swift', :git => 'https://github.com/ViccAlexander/Chameleon.git'
   pod 'DateToolsSwift', '~> 4.0'

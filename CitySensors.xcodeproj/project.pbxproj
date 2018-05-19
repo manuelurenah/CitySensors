@@ -11,10 +11,10 @@
 		8D4770B320AC393000934AE0 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4770B220AC393000934AE0 /* ARViewController.swift */; };
 		8D5C66C220A464D200A4E805 /* Sensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C120A464D200A4E805 /* Sensor.swift */; };
 		8D5C66C420A4680B00A4E805 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C320A4680B00A4E805 /* Constants.swift */; };
+		8DB029C420B0C350006F4EF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8DB029C320B0C350006F4EF4 /* Assets.xcassets */; };
 		8DBC498B20A24757006756C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC498A20A24757006756C3 /* AppDelegate.swift */; };
-		8DBC498D20A24757006756C3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC498C20A24757006756C3 /* ViewController.swift */; };
+		8DBC498D20A24757006756C3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC498C20A24757006756C3 /* SettingsViewController.swift */; };
 		8DBC499020A24757006756C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8DBC498E20A24757006756C3 /* Main.storyboard */; };
-		8DBC499220A24758006756C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8DBC499120A24758006756C3 /* Assets.xcassets */; };
 		8DBC499520A24758006756C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8DBC499320A24758006756C3 /* LaunchScreen.storyboard */; };
 		8DD8A0A620ACD6FE0037BEC9 /* SpriteKitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD8A0A520ACD6FE0037BEC9 /* SpriteKitViewController.swift */; };
 		8DE2EBC420A4FF6200B94D0F /* ApiHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE2EBC320A4FF6200B94D0F /* ApiHandler.swift */; };
@@ -28,11 +28,11 @@
 		8D4770B220AC393000934AE0 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
 		8D5C66C120A464D200A4E805 /* Sensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sensor.swift; sourceTree = "<group>"; };
 		8D5C66C320A4680B00A4E805 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		8DB029C320B0C350006F4EF4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8DBC498720A24757006756C3 /* CitySensors.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CitySensors.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DBC498A20A24757006756C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8DBC498C20A24757006756C3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		8DBC498C20A24757006756C3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		8DBC498F20A24757006756C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		8DBC499120A24758006756C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8DBC499420A24758006756C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8DBC499620A24758006756C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DD8A0A520ACD6FE0037BEC9 /* SpriteKitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteKitViewController.swift; sourceTree = "<group>"; };
@@ -116,9 +116,9 @@
 		8DBC498920A24757006756C3 /* CitySensors */ = {
 			isa = PBXGroup;
 			children = (
+				8DB029C320B0C350006F4EF4 /* Assets.xcassets */,
 				8D4770B220AC393000934AE0 /* ARViewController.swift */,
-				8DBC498C20A24757006756C3 /* ViewController.swift */,
-				8DBC499120A24758006756C3 /* Assets.xcassets */,
+				8DBC498C20A24757006756C3 /* SettingsViewController.swift */,
 				8D1B068220A26874007FAC3E /* Helpers */,
 				8DEF4C3F20A493E4009E3791 /* Interfaces */,
 				8D1B068020A26863007FAC3E /* Models */,
@@ -226,8 +226,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DBC499520A24758006756C3 /* LaunchScreen.storyboard in Resources */,
-				8DBC499220A24758006756C3 /* Assets.xcassets in Resources */,
 				8D26A39A20A35C2D009E66F2 /* .gitkeep in Resources */,
+				8DB029C420B0C350006F4EF4 /* Assets.xcassets in Resources */,
 				8DBC499020A24757006756C3 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -297,7 +297,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D4770B320AC393000934AE0 /* ARViewController.swift in Sources */,
-				8DBC498D20A24757006756C3 /* ViewController.swift in Sources */,
+				8DBC498D20A24757006756C3 /* SettingsViewController.swift in Sources */,
 				8DE2EBC420A4FF6200B94D0F /* ApiHandler.swift in Sources */,
 				8D5C66C220A464D200A4E805 /* Sensor.swift in Sources */,
 				8DBC498B20A24757006756C3 /* AppDelegate.swift in Sources */,

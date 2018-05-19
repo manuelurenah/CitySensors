@@ -7,12 +7,11 @@
 //
 
 import Foundation
-import Alamofire
 import Moya
 
 enum SensorService {
-    case getSensors(parameters: Parameters)
-    case getLiveSensorData(parameters: Parameters)
+    case getSensors(parameters: [String : Any])
+    case getLiveSensorData(parameters: [String : Any])
 }
 
 extension SensorService: TargetType {

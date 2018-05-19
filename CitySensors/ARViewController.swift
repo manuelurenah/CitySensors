@@ -7,20 +7,32 @@
 //
 
 import UIKit
+import ARCL
 import ARKit
+import CoreLocation
+import PKHUD
 import SceneKit
+import SwifterSwift
 
-class ARViewController: UIViewController, ARSCNViewDelegate {
+class ARViewController: UIViewController {
 
-    @IBOutlet weak var sceneView: ARSCNView!
+    @IBOutlet weak var sceneLocationView: SceneLocationView!
 
-    var sensor: Sensor!
+    let locationManager = CLLocationManager()
+    var sensors = [Sensor]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        configureLighting()
-        addSphere(0.05)
+        HUD.show(.progress, onView: self.view)
+
+        locationManager.requestWhenInUseAuthorization()
+
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.requestLocation()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -32,42 +44,49 @@ class ARViewController: UIViewController, ARSCNViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        sceneView.session.pause()
+        sceneLocationView.pause()
     }
 
     func setUpSceneView() {
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = .horizontal
 
-        sceneView.session.run(configuration)
+        sceneLocationView.run()
+    }
+}
 
-        sceneView.delegate = self
-        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
-        sceneView.showsStatistics = true
+extension ARViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let currentLocation = locations.first else { return }
+
+        let parameters = [
+            "api_key": APIConfig.API_KEY,
+            "buffer": "\(currentLocation.coordinate.longitude),\(currentLocation.coordinate.latitude),\(Constants.DEFAULT_RADIUS)",
+            "sensor_type": ["Environmental", "Traffic", "Weather"].joined(separator: "-and-"),
+        ]
+
+        ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
+            self.sensors = sensors
+            HUD.hide()
+
+            for sensor in self.sensors {
+                let coordinate = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[0], longitude: sensor.geometry.coordinates[1])
+                let location = CLLocation(coordinate: coordinate, altitude: 300)
+                let sensorImage = UIImage(named: sensor.type)!
+                let annotationNode = LocationAnnotationNode(location: location, image: sensorImage)
+
+                self.sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+            }
+        }, onError: { error in
+            let alertController = UIAlertController(title: "Unexpected Error", message: "An Unexpected error occurred, please try again", defaultActionButtonTitle: "Ok", tintColor: UIColor.blue)
+
+            HUD.hide()
+            alertController.show(animated: true, vibrate: false, completion: nil)
+
+            print(error)
+        })
     }
 
-    func configureLighting() {
-        sceneView.autoenablesDefaultLighting = true
-        sceneView.automaticallyUpdatesLighting = true
-    }
-
-    func addSphere(_ radius: CGFloat) {
-        let sphereGeometry = SCNSphere(radius: radius)
-        let titleGeometry = SCNText(string: sensor.type, extrusionDepth: 0.2)
-        titleGeometry.font = UIFont(name: "Arial", size: 2)
-
-        sphereGeometry.materials.first?.diffuse.contents = UIColor.green
-
-        let sphereNode = SCNNode(geometry: sphereGeometry)
-        let titleNode = SCNNode(geometry: titleGeometry)
-
-        sphereNode.position = SCNVector3(0, 0, -0.2)
-        titleNode.center()
-        titleNode.position = SCNVector3(0, 0.2, -0.2)
-        titleNode.scale = SCNVector3(0.05, 0.05, 0.05)
-
-        sceneView.scene.rootNode.addChildNode(sphereNode)
-        sceneView.scene.rootNode.addChildNode(titleNode)
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
     }
 }
 
