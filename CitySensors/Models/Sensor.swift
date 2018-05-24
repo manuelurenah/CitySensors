@@ -38,7 +38,7 @@ struct Sensor: Codable {
             let theme: String
         }
 
-        let data: [String:Float]
+        let data: [String:Double]
         let meta: Meta
     }
 
@@ -48,7 +48,7 @@ struct Sensor: Codable {
     let type: String
     let source: Source
     let data: [String:Value]
-    let baseHeight: String
+    let baseHeight: Double
     let sensorHeight: String
     let name: String
 
@@ -80,10 +80,10 @@ struct Sensor: Codable {
         source = try container.decode(Source.self, forKey: .source)
         data = try container.decode([String:Value].self, forKey: .data)
 
-        if let baseHeightValue = try? container.decode(Float.self, forKey: .baseHeight) {
-            baseHeight = String(baseHeightValue)
+        if let baseHeightValue = try? container.decode(String.self, forKey: .baseHeight) {
+            baseHeight = Double(baseHeightValue)!
         } else {
-            baseHeight = try container.decode(String.self, forKey: .baseHeight)
+            baseHeight = try container.decode(Double.self, forKey: .baseHeight)
         }
 
         if let sensorHeightValue = try? container.decode(Float.self, forKey: .sensorHeight) {

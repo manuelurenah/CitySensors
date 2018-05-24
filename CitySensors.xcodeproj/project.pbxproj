@@ -11,6 +11,8 @@
 		8D4770B320AC393000934AE0 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4770B220AC393000934AE0 /* ARViewController.swift */; };
 		8D5C66C220A464D200A4E805 /* Sensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C120A464D200A4E805 /* Sensor.swift */; };
 		8D5C66C420A4680B00A4E805 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C320A4680B00A4E805 /* Constants.swift */; };
+		8D9696B720B4322E005067BB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9696B620B4322E005067BB /* String+Extension.swift */; };
+		8D9696BA20B44C96005067BB /* SensorNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9696B920B44C96005067BB /* SensorNode.swift */; };
 		8DB029C420B0C350006F4EF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8DB029C320B0C350006F4EF4 /* Assets.xcassets */; };
 		8DBC498B20A24757006756C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC498A20A24757006756C3 /* AppDelegate.swift */; };
 		8DBC498D20A24757006756C3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC498C20A24757006756C3 /* SettingsViewController.swift */; };
@@ -28,6 +30,8 @@
 		8D4770B220AC393000934AE0 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
 		8D5C66C120A464D200A4E805 /* Sensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sensor.swift; sourceTree = "<group>"; };
 		8D5C66C320A4680B00A4E805 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		8D9696B620B4322E005067BB /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		8D9696B920B44C96005067BB /* SensorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorNode.swift; sourceTree = "<group>"; };
 		8DB029C320B0C350006F4EF4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8DBC498720A24757006756C3 /* CitySensors.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CitySensors.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DBC498A20A24757006756C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -91,8 +95,17 @@
 			isa = PBXGroup;
 			children = (
 				8D5C66C320A4680B00A4E805 /* Constants.swift */,
+				8D9696B620B4322E005067BB /* String+Extension.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		8D9696B820B44C71005067BB /* ARModels */ = {
+			isa = PBXGroup;
+			children = (
+				8D9696B920B44C96005067BB /* SensorNode.swift */,
+			);
+			path = ARModels;
 			sourceTree = "<group>";
 		};
 		8DBC497E20A24757006756C3 = {
@@ -116,6 +129,7 @@
 		8DBC498920A24757006756C3 /* CitySensors */ = {
 			isa = PBXGroup;
 			children = (
+				8D9696B820B44C71005067BB /* ARModels */,
 				8DB029C320B0C350006F4EF4 /* Assets.xcassets */,
 				8D4770B220AC393000934AE0 /* ARViewController.swift */,
 				8DBC498C20A24757006756C3 /* SettingsViewController.swift */,
@@ -297,6 +311,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D4770B320AC393000934AE0 /* ARViewController.swift in Sources */,
+				8D9696BA20B44C96005067BB /* SensorNode.swift in Sources */,
+				8D9696B720B4322E005067BB /* String+Extension.swift in Sources */,
 				8DBC498D20A24757006756C3 /* SettingsViewController.swift in Sources */,
 				8DE2EBC420A4FF6200B94D0F /* ApiHandler.swift in Sources */,
 				8D5C66C220A464D200A4E805 /* Sensor.swift in Sources */,

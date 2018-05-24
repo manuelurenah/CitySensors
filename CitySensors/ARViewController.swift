@@ -19,6 +19,7 @@ class ARViewController: UIViewController {
     @IBOutlet weak var sceneLocationView: SceneLocationView!
 
     let locationManager = CLLocationManager()
+    var userLocation = CLLocation()
     var sensors = [Sensor]()
 
     override func viewDidLoad() {
@@ -38,7 +39,7 @@ class ARViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        setUpSceneView()
+        sceneLocationView.run()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -47,20 +48,25 @@ class ARViewController: UIViewController {
         sceneLocationView.pause()
     }
 
-    func setUpSceneView() {
+    func getSensorReadings(sensor: Sensor) -> String {
+        return sensor.data.reduce("") { (result, entry) in
+            guard let currentReading = entry.value.data.first?.value else { return "" }
+            let formattedReading = String(format: "%.2f", currentReading)
 
-        sceneLocationView.run()
+            return result + "\(entry.key): \(formattedReading) \(entry.value.meta.units)\n"
+        }
     }
 }
 
 extension ARViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let currentLocation = locations.first else { return }
+        guard let currentLocation = locations.last else { return }
+        self.userLocation = currentLocation
 
         let parameters = [
             "api_key": APIConfig.API_KEY,
-            "buffer": "\(currentLocation.coordinate.longitude),\(currentLocation.coordinate.latitude),\(Constants.DEFAULT_RADIUS)",
-            "sensor_type": ["Environmental", "Traffic", "Weather"].joined(separator: "-and-"),
+            "buffer": "\(self.userLocation.coordinate.longitude),\(self.userLocation.coordinate.latitude),\(Constants.DEFAULT_RADIUS)",
+            "sensor_type": "Weather",
         ]
 
         ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
@@ -68,25 +74,46 @@ extension ARViewController: CLLocationManagerDelegate {
             HUD.hide()
 
             for sensor in self.sensors {
-                let coordinate = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[0], longitude: sensor.geometry.coordinates[1])
-                let location = CLLocation(coordinate: coordinate, altitude: 300)
+                let sensorHeight = sensor.baseHeight == -999.0 ? 1.0 : sensor.baseHeight
+                let coordinate = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[1], longitude: sensor.geometry.coordinates[0])
+                let location = CLLocation(coordinate: coordinate, altitude: sensorHeight)
                 let sensorImage = UIImage(named: sensor.type)!
                 let annotationNode = LocationAnnotationNode(location: location, image: sensorImage)
+
+                let sensorTitleGeometry = SCNText(string: sensor.source.webDisplayName, extrusionDepth: 0.01)
+                sensorTitleGeometry.font = UIFont(name: "San Francisco", size: 10)
+
+                let sensorTitleNode = SCNNode(geometry: sensorTitleGeometry)
+                sensorTitleNode.center()
+                sensorTitleNode.position = SCNVector3(0, annotationNode.boundingBox.max.y, 0)
+                sensorTitleNode.scale = SCNVector3(x: 0.5, y: 0.5, z: 0.5)
+
+                let currentReadings = self.getSensorReadings(sensor: sensor)
+                let sensorReadingGeometry = SCNText(string: currentReadings, extrusionDepth: 0.01)
+                sensorReadingGeometry.font = UIFont(name: "San Francisco", size: 10)
+
+                let sensorReadingNode = SCNNode(geometry: sensorReadingGeometry)
+                sensorReadingNode.position = SCNVector3(x: annotationNode.boundingBox.max.x, y: 0, z: 0.5)
+                sensorReadingNode.scale = SCNVector3(x: 0.2, y: 0.2, z: 0.2)
+
+                annotationNode.addChildNode(sensorTitleNode)
+                annotationNode.addChildNode(sensorReadingNode)
 
                 self.sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
             }
         }, onError: { error in
-            let alertController = UIAlertController(title: "Unexpected Error", message: "An Unexpected error occurred, please try again", defaultActionButtonTitle: "Ok", tintColor: UIColor.blue)
-
             HUD.hide()
-            alertController.show(animated: true, vibrate: false, completion: nil)
 
-            print(error)
+            let alertController = UIAlertController(error: error)
+            alertController.show()
         })
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error)
+        HUD.hide()
+
+        let alertController = UIAlertController(error: error)
+        alertController.show()
     }
 }
 
