@@ -14,6 +14,5 @@ enum APIConfig {
 }
 
 enum Constants {
-    static let DEFAULT_RADIUS = 100
-    static let DEFAULT_MAP_STYLE = "mapbox://styles/boundsj/cj7dpkv3a15tz2stgble0sd96"
+    static let DEFAULT_RADIUS = 200
 }

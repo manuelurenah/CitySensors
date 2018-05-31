@@ -99,7 +99,7 @@ extension ARViewController: CLLocationManagerDelegate {
         let parameters = [
             "api_key": APIConfig.API_KEY,
             "buffer": "\(self.userLocation.coordinate.longitude),\(self.userLocation.coordinate.latitude),\(Constants.DEFAULT_RADIUS)",
-            "sensor_type": "Air Quality",
+            "sensor_type": "Air Quality-and-Weather-and-Environmental",
         ]
 
         ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
@@ -116,8 +116,7 @@ extension ARViewController: CLLocationManagerDelegate {
                 let sensorCoordinates = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[1], longitude: sensor.geometry.coordinates[0])
                 let mapAnnotation = MGLPointAnnotation()
                 mapAnnotation.coordinate = sensorCoordinates
-
-                print(currentReadings)
+                mapAnnotation.title = sensor.type
 
                 billboardView.titleLabel.text = sensorTitle
                 billboardView.iconImageView.image = sensorImage
@@ -127,23 +126,21 @@ extension ARViewController: CLLocationManagerDelegate {
                 let billboardImage = billboardView.takeSnapshot()
                 let annotationNode = LocationAnnotationNode(location: location, image: billboardImage)
 
+                self.sceneLocationView.scene.rootNode.enumerateChildNodes(<#T##block: (SCNNode, UnsafeMutablePointer<ObjCBool>) -> Void##(SCNNode, UnsafeMutablePointer<ObjCBool>) -> Void#>)
                 self.sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
                 self.compassMapView.addAnnotation(mapAnnotation)
             }
         }, onError: { error in
-            HUD.hide()
             print(error)
 
-            let alertController = UIAlertController(error: error)
-            alertController.show()
+            HUD.hide()
+            self.showAlert(title: "Error", message: error.localizedDescription)
         })
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         HUD.hide()
-
-        let alertController = UIAlertController(error: error)
-        alertController.show()
+        showAlert(title: "Error", message: error.localizedDescription)
     }
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -154,8 +151,16 @@ extension ARViewController: CLLocationManagerDelegate {
 }
 
 extension ARViewController: MGLMapViewDelegate {
-    func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        return nil
+    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        let reuseIdentifier = annotation.title!!
+        var annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: reuseIdentifier)
+
+        if annotationImage == nil {
+            let image = UIImage(named: reuseIdentifier)!
+            annotationImage = MGLAnnotationImage(image: image, reuseIdentifier: reuseIdentifier)
+        }
+
+        return annotationImage
     }
 }
 
