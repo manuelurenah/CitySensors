@@ -14,9 +14,9 @@ import SceneKit
 
 class SensorNode: LocationAnnotationNode {
 
-    var sensor: Sensor?
+    var sensor: UrbanObservatorySensor?
 
-    init(sensor: Sensor, location: CLLocation?, image: UIImage) {
+    init(sensor: UrbanObservatorySensor, location: CLLocation?, image: UIImage) {
         super.init(location: location, image: image)
 
         self.sensor = sensor

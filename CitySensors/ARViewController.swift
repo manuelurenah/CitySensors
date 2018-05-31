@@ -10,6 +10,7 @@ import UIKit
 import ARCL
 import ARKit
 import CoreLocation
+import Mapbox
 import PKHUD
 import SceneKit
 import SwifterSwift
@@ -17,23 +18,30 @@ import SwifterSwift
 class ARViewController: UIViewController {
 
     @IBOutlet weak var sceneLocationView: SceneLocationView!
+    @IBOutlet weak var compassMapView: CompassMapView!
 
     let locationManager = CLLocationManager()
     var userLocation = CLLocation()
-    var sensors = [Sensor]()
+    var sensors = [UrbanObservatorySensor]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         HUD.show(.progress, onView: self.view)
 
-        locationManager.requestWhenInUseAuthorization()
+        locationManager.delegate = self
 
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.requestLocation()
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedWhenInUse:
+            setupLocationServices()
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        default:
+            showAlert(title: "Location Services", message: "Please enable the location services")
         }
+
+        setupSceneView()
+        setupMapView()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -48,7 +56,27 @@ class ARViewController: UIViewController {
         sceneLocationView.pause()
     }
 
-    func getSensorReadings(sensor: Sensor) -> String {
+    func setupSceneView() {
+        let scene = SCNScene()
+
+        sceneLocationView.scene = scene
+        sceneLocationView.showsStatistics = false
+        sceneLocationView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+    }
+
+    func setupMapView() {
+        compassMapView.delegate = self
+        compassMapView.isMapInteractive = false
+    }
+
+    func setupLocationServices() {
+        locationManager.activityType = .fitness
+        locationManager.distanceFilter = 1
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        locationManager.requestLocation()
+    }
+
+    func getSensorReadings(sensor: UrbanObservatorySensor) -> String {
         return sensor.data.reduce("") { (result, entry) in
             guard let currentReading = entry.value.data.first?.value else { return "" }
             let formattedReading = String(format: "%.2f", currentReading)
@@ -63,46 +91,48 @@ extension ARViewController: CLLocationManagerDelegate {
         guard let currentLocation = locations.last else { return }
         self.userLocation = currentLocation
 
+        if compassMapView.userTrackingMode == .none {
+            compassMapView.setCenter(currentLocation.coordinate, zoomLevel: 14, animated: false)
+            compassMapView.userTrackingMode = .followWithHeading
+        }
+
         let parameters = [
             "api_key": APIConfig.API_KEY,
             "buffer": "\(self.userLocation.coordinate.longitude),\(self.userLocation.coordinate.latitude),\(Constants.DEFAULT_RADIUS)",
-            "sensor_type": "Weather",
+            "sensor_type": "Air Quality",
         ]
 
         ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
             self.sensors = sensors
             HUD.hide()
 
+            let billboardView: BillboardView = BillboardView.fromNib()
+            
             for sensor in self.sensors {
-                let sensorHeight = sensor.baseHeight == -999.0 ? 1.0 : sensor.baseHeight
-                let coordinate = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[1], longitude: sensor.geometry.coordinates[0])
-                let location = CLLocation(coordinate: coordinate, altitude: sensorHeight)
                 let sensorImage = UIImage(named: sensor.type)!
-                let annotationNode = LocationAnnotationNode(location: location, image: sensorImage)
-
-                let sensorTitleGeometry = SCNText(string: sensor.source.webDisplayName, extrusionDepth: 0.01)
-                sensorTitleGeometry.font = UIFont(name: "San Francisco", size: 10)
-
-                let sensorTitleNode = SCNNode(geometry: sensorTitleGeometry)
-                sensorTitleNode.center()
-                sensorTitleNode.position = SCNVector3(0, annotationNode.boundingBox.max.y, 0)
-                sensorTitleNode.scale = SCNVector3(x: 0.5, y: 0.5, z: 0.5)
-
+                let sensorTitle = sensor.source.webDisplayName
                 let currentReadings = self.getSensorReadings(sensor: sensor)
-                let sensorReadingGeometry = SCNText(string: currentReadings, extrusionDepth: 0.01)
-                sensorReadingGeometry.font = UIFont(name: "San Francisco", size: 10)
+                let sensorHeight = sensor.baseHeight == -999.0 ? 10.0 : sensor.baseHeight
+                let sensorCoordinates = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[1], longitude: sensor.geometry.coordinates[0])
+                let mapAnnotation = MGLPointAnnotation()
+                mapAnnotation.coordinate = sensorCoordinates
 
-                let sensorReadingNode = SCNNode(geometry: sensorReadingGeometry)
-                sensorReadingNode.position = SCNVector3(x: annotationNode.boundingBox.max.x, y: 0, z: 0.5)
-                sensorReadingNode.scale = SCNVector3(x: 0.2, y: 0.2, z: 0.2)
+                print(currentReadings)
 
-                annotationNode.addChildNode(sensorTitleNode)
-                annotationNode.addChildNode(sensorReadingNode)
+                billboardView.titleLabel.text = sensorTitle
+                billboardView.iconImageView.image = sensorImage
+                billboardView.readingsLabel.text = currentReadings
+
+                let location = CLLocation(coordinate: sensorCoordinates, altitude: sensorHeight)
+                let billboardImage = billboardView.takeSnapshot()
+                let annotationNode = LocationAnnotationNode(location: location, image: billboardImage)
 
                 self.sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+                self.compassMapView.addAnnotation(mapAnnotation)
             }
         }, onError: { error in
             HUD.hide()
+            print(error)
 
             let alertController = UIAlertController(error: error)
             alertController.show()
@@ -114,6 +144,18 @@ extension ARViewController: CLLocationManagerDelegate {
 
         let alertController = UIAlertController(error: error)
         alertController.show()
+    }
+
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
+            setupLocationServices()
+        }
+    }
+}
+
+extension ARViewController: MGLMapViewDelegate {
+    func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+        return nil
     }
 }
 

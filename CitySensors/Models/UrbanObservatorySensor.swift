@@ -9,7 +9,7 @@
 import Foundation
 
 // MARK: - Sensor struct Model
-struct Sensor: Codable {
+struct UrbanObservatorySensor: Codable {
     struct Geometry: Codable {
         let coordinates: [Double]
         let type: String

@@ -5,6 +5,9 @@ PODS:
   - ChameleonFramework/Swift (2.1.0):
     - ChameleonFramework/Default
   - DateToolsSwift (4.0.0)
+  - Mapbox-iOS-SDK (4.0.0)
+  - MapboxARKit (0.0.1):
+    - Turf
   - Moya/Core (11.0.2):
     - Alamofire (~> 4.1)
     - Result (~> 3.0)
@@ -31,11 +34,14 @@ PODS:
   - SwifterSwift/MapKit (4.3.0)
   - SwifterSwift/SwiftStdlib (4.3.0)
   - SwifterSwift/UIKit (4.3.0)
+  - Turf (0.1.1)
 
 DEPENDENCIES:
   - ARCL (~> 1.0)
   - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`)
   - DateToolsSwift (~> 4.0)
+  - Mapbox-iOS-SDK (~> 4.0)
+  - MapboxARKit (from `https://github.com/mapbox/mapbox-arkit-ios.git`)
   - Moya/RxSwift (~> 11.0)
   - PKHUD (~> 5.0)
   - RxCocoa (~> 4.0)
@@ -47,34 +53,44 @@ SPEC REPOS:
     - Alamofire
     - ARCL
     - DateToolsSwift
+    - Mapbox-iOS-SDK
     - Moya
     - PKHUD
     - Result
     - RxCocoa
     - RxSwift
     - SwifterSwift
+    - Turf
 
 EXTERNAL SOURCES:
   ChameleonFramework:
     :git: https://github.com/ViccAlexander/Chameleon.git
+  MapboxARKit:
+    :git: https://github.com/mapbox/mapbox-arkit-ios.git
 
 CHECKOUT OPTIONS:
   ChameleonFramework:
     :commit: 6dd284bde21ea2e7f9fd89bc36f40df16e16369d
     :git: https://github.com/ViccAlexander/Chameleon.git
+  MapboxARKit:
+    :commit: 43e7c08e460a8cc4835fb7de17924937274f60ef
+    :git: https://github.com/mapbox/mapbox-arkit-ios.git
 
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
   ARCL: 88300cadfbdd6a9288ca17ad18d3ac972d6cb1e6
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   DateToolsSwift: 875d97ff9e3a5d54abdd67a269b3f51c757b71ab
+  Mapbox-iOS-SDK: 271754e96eb4434ba1b0a8c68432e1ea26fe9841
+  MapboxARKit: 12a4d1ff584b22feb62f44eed86f9e4522b1da70
   Moya: a725035953bc1c0eb1be505ab903984501d82440
   PKHUD: 3c001512c6e002091184197a8de7a20420786e3b
   Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
   RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
   RxSwift: e49536837d9901277638493ea537394d4b55f570
   SwifterSwift: f3fce2b9fc5b9d8fda6eec33825e5243c60aebba
+  Turf: 4ace207379c8d58a8e45842755de821dac3fae72
 
-PODFILE CHECKSUM: 76bdc799fae02122636c74f1535ab7a1464828ae
+PODFILE CHECKSUM: a4f734cc978bb1b73ebb4eae5b7b5cfc42ce491f
 
 COCOAPODS: 1.5.0

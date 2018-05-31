@@ -14,7 +14,7 @@ class ApiHandler {
     static let provider = MoyaProvider<SensorService>()
     static let disposeBag = DisposeBag()
 
-    static func getLiveSensorData(with parameters: [String : Any], onSuccess: @escaping ([Sensor])->(), onError: @escaping (Error)->()) {
+    static func getLiveSensorData(with parameters: [String : Any], onSuccess: @escaping ([UrbanObservatorySensor])->(), onError: @escaping (Error)->()) {
         provider.rx.request(.getLiveSensorData(parameters: parameters)).subscribe { event in
             switch event {
             case let .success(response):
@@ -26,7 +26,7 @@ class ApiHandler {
                         nan: "NaN"
                     )
 
-                    let sensors = try decoder.decode([Sensor].self, from: response.data)
+                    let sensors = try decoder.decode([UrbanObservatorySensor].self, from: response.data)
 
                     onSuccess(sensors)
                 } catch let error {

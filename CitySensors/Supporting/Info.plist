@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>MGLMapboxAccessToken</key>
+	<string>pk.eyJ1IjoibWFudWVsdXJlbmFoIiwiYSI6ImNqaHFwa3FybzAzaXozNm4wank3cndvbDgifQ.gkgOYBkhx_1PDBKCPK0Pmg</string>
+	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
+	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Please allow permission to use the camera to present information in AR</string>
 	<key>NSLocationUsageDescription</key>
