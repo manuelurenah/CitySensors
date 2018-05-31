@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8D073B5020C02ACC002D0B67 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D073B4F20C02ACB002D0B67 /* Assets.xcassets */; };
+		8D09FE7420C09C6500B01741 /* SettingsContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D09FE7320C09C6500B01741 /* SettingsContainerViewController.swift */; };
 		8D26A39A20A35C2D009E66F2 /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 8D26A39920A35C2D009E66F2 /* .gitkeep */; };
 		8D4770B320AC393000934AE0 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4770B220AC393000934AE0 /* ARViewController.swift */; };
 		8D5C66C220A464D200A4E805 /* UrbanObservatorySensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C120A464D200A4E805 /* UrbanObservatorySensor.swift */; };
@@ -30,6 +31,7 @@
 /* Begin PBXFileReference section */
 		1501DA499FD90DF5AB36ECD8 /* Pods-CitySensors.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CitySensors.release.xcconfig"; path = "Pods/Target Support Files/Pods-CitySensors/Pods-CitySensors.release.xcconfig"; sourceTree = "<group>"; };
 		8D073B4F20C02ACB002D0B67 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8D09FE7320C09C6500B01741 /* SettingsContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsContainerViewController.swift; sourceTree = "<group>"; };
 		8D26A39920A35C2D009E66F2 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		8D4770B220AC393000934AE0 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
 		8D5C66C120A464D200A4E805 /* UrbanObservatorySensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrbanObservatorySensor.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 				8DEF4C4020A493EE009E3791 /* Supporting */,
 				8D1B068120A26869007FAC3E /* ViewModels */,
 				8DF868B920BF075900308AED /* Views */,
+				8D09FE7320C09C6500B01741 /* SettingsContainerViewController.swift */,
 			);
 			path = CitySensors;
 			sourceTree = "<group>";
@@ -336,6 +339,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D09FE7420C09C6500B01741 /* SettingsContainerViewController.swift in Sources */,
 				8DA181F620BD904800573915 /* CompassMapView.swift in Sources */,
 				8D4770B320AC393000934AE0 /* ARViewController.swift in Sources */,
 				8D9696BA20B44C96005067BB /* SensorNode.swift in Sources */,

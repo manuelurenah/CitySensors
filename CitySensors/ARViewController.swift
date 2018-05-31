@@ -126,7 +126,6 @@ extension ARViewController: CLLocationManagerDelegate {
                 let billboardImage = billboardView.takeSnapshot()
                 let annotationNode = LocationAnnotationNode(location: location, image: billboardImage)
 
-                self.sceneLocationView.scene.rootNode.enumerateChildNodes(<#T##block: (SCNNode, UnsafeMutablePointer<ObjCBool>) -> Void##(SCNNode, UnsafeMutablePointer<ObjCBool>) -> Void#>)
                 self.sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
                 self.compassMapView.addAnnotation(mapAnnotation)
             }
@@ -147,6 +146,14 @@ extension ARViewController: CLLocationManagerDelegate {
         if status == .authorizedAlways || status == .authorizedWhenInUse {
             setupLocationServices()
         }
+    }
+}
+
+extension ARViewController {
+    @IBAction func closeSettings(_ segue: UIStoryboardSegue) {
+    }
+
+    @IBAction func saveSettings(_ segue: UIStoryboardSegue) {
     }
 }
 
