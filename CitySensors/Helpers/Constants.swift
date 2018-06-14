@@ -14,5 +14,5 @@ enum APIConfig {
 }
 
 enum Constants {
-    static let DEFAULT_RADIUS = 200
+    static let DEFAULT_RADIUS = 100
 }

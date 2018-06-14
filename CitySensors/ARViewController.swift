@@ -84,6 +84,11 @@ class ARViewController: UIViewController {
             return result + "\(entry.key): \(formattedReading) \(entry.value.meta.units)\n"
         }
     }
+
+    func resetSession() {
+        sceneLocationView.pause()
+        sceneLocationView.run()
+    }
 }
 
 extension ARViewController: CLLocationManagerDelegate {
@@ -150,11 +155,8 @@ extension ARViewController: CLLocationManagerDelegate {
 }
 
 extension ARViewController {
-    @IBAction func closeSettings(_ segue: UIStoryboardSegue) {
-    }
-
-    @IBAction func saveSettings(_ segue: UIStoryboardSegue) {
-    }
+    @IBAction func closeSettings(_ segue: UIStoryboardSegue) {}
+    @IBAction func saveSettings(_ segue: UIStoryboardSegue) {}
 }
 
 extension ARViewController: MGLMapViewDelegate {
@@ -168,6 +170,23 @@ extension ARViewController: MGLMapViewDelegate {
         }
 
         return annotationImage
+    }
+}
+
+extension ARViewController: ARSCNViewDelegate {
+    func session(_ session: ARSession, didFailWithError error: Error) {
+        showAlert(title: "Error", message: error.localizedDescription)
+
+        if let sessionError = error as? ARError {
+            switch sessionError.errorCode {
+            case 102:
+                sceneLocationView.orientToTrueNorth = false
+                resetSession()
+            default:
+                sceneLocationView.orientToTrueNorth = true
+                resetSession()
+            }
+        }
     }
 }
 
