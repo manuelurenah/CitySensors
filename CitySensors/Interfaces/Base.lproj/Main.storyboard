@@ -524,6 +524,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="dDh-qH-qTa"/>
                     </view>
+                    <connections>
+                        <outlet property="navigationBar" destination="Gdt-JO-KUE" id="c73-2w-Ab2"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FgZ-we-K6f" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="J9C-kH-lwa" userLabel="Exit" sceneMemberID="exit"/>

@@ -11,9 +11,14 @@ import ChameleonFramework
 
 class SettingsContainerViewController: UIViewController {
 
+    @IBOutlet weak var navigationBar: UINavigationBar!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.setStatusBarStyle(UIStatusBarStyleContrast)
+
+        navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationBar.shadowImage = UIImage()
     }
 }
