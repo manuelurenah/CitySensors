@@ -9,6 +9,7 @@
 import UIKit
 import ARCL
 import ARKit
+import ChameleonFramework
 import CoreLocation
 import Mapbox
 import PKHUD
@@ -26,6 +27,8 @@ class ARViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.setStatusBarStyle(UIStatusBarStyleContrast)
 
         HUD.show(.progress, onView: self.view)
 

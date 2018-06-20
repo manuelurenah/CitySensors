@@ -7,18 +7,13 @@
 //
 
 import UIKit
+import ChameleonFramework
 
 class SettingsContainerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.setStatusBarStyle(UIStatusBarStyleContrast)
     }
-
-}
-
-// MARK: - IBActions
-extension SettingsContainerViewController {
-
 }
