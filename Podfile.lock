@@ -31,6 +31,7 @@ PODS:
   - SwifterSwift/MapKit (4.3.0)
   - SwifterSwift/SwiftStdlib (4.3.0)
   - SwifterSwift/UIKit (4.3.0)
+  - UIImageColors (2.0.0)
 
 DEPENDENCIES:
   - ARCL (~> 1.0)
@@ -41,6 +42,7 @@ DEPENDENCIES:
   - RxCocoa (~> 4.0)
   - RxSwift (~> 4.0)
   - SwifterSwift (~> 4.0)
+  - UIImageColors (~> 2.0)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -53,6 +55,7 @@ SPEC REPOS:
     - RxCocoa
     - RxSwift
     - SwifterSwift
+    - UIImageColors
 
 EXTERNAL SOURCES:
   ChameleonFramework:
@@ -74,7 +77,8 @@ SPEC CHECKSUMS:
   RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
   RxSwift: e49536837d9901277638493ea537394d4b55f570
   SwifterSwift: f3fce2b9fc5b9d8fda6eec33825e5243c60aebba
+  UIImageColors: 3ae0150e539342697808281a3975fe5dec2024ce
 
-PODFILE CHECKSUM: 76bdc799fae02122636c74f1535ab7a1464828ae
+PODFILE CHECKSUM: b69df64e76061040ef8f22b3b893871430d88456
 
 COCOAPODS: 1.5.0

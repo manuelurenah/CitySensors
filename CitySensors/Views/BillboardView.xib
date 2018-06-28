@@ -19,7 +19,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Wo-YR-hRY" userLabel="Billboard Container View">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="308"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="redraw" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gxT-5X-bL0" userLabel="Icon Image View">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Sensor" translatesAutoresizingMaskIntoConstraints="NO" id="gxT-5X-bL0" userLabel="Icon Image View">
                             <rect key="frame" x="8" y="8" width="64" height="64"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="64" id="6SZ-MJ-Lq7"/>
@@ -61,7 +61,6 @@
                     </constraints>
                 </imageView>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="7Wo-YR-hRY" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="7jr-pP-6AX"/>
                 <constraint firstItem="7Wo-YR-hRY" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="Hjv-nt-3dV"/>
@@ -87,5 +86,6 @@
     </objects>
     <resources>
         <image name="Carret Down" width="100" height="100"/>
+        <image name="Sensor" width="100" height="100"/>
     </resources>
 </document>

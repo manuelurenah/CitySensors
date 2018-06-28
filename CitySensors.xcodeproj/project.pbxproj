@@ -19,6 +19,8 @@
 		8DBC498D20A24757006756C3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC498C20A24757006756C3 /* SettingsViewController.swift */; };
 		8DBC499020A24757006756C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8DBC498E20A24757006756C3 /* Main.storyboard */; };
 		8DBC499520A24758006756C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8DBC499320A24758006756C3 /* LaunchScreen.storyboard */; };
+		8DBE606720E531B000526983 /* WaypointView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DBE606620E531B000526983 /* WaypointView.xib */; };
+		8DBE606920E531C300526983 /* WaypointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBE606820E531C300526983 /* WaypointView.swift */; };
 		8DCBDDE020E3F47C001E4B3E /* SensorAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBDDDF20E3F47C001E4B3E /* SensorAnnotation.swift */; };
 		8DCBDDE220E3F8BB001E4B3E /* MKMapView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBDDE120E3F8BB001E4B3E /* MKMapView+Extension.swift */; };
 		8DD8A0A620ACD6FE0037BEC9 /* SpriteKitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD8A0A520ACD6FE0037BEC9 /* SpriteKitViewController.swift */; };
@@ -46,6 +48,8 @@
 		8DBC498F20A24757006756C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8DBC499420A24758006756C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8DBC499620A24758006756C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8DBE606620E531B000526983 /* WaypointView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WaypointView.xib; sourceTree = "<group>"; };
+		8DBE606820E531C300526983 /* WaypointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointView.swift; sourceTree = "<group>"; };
 		8DCBDDDF20E3F47C001E4B3E /* SensorAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorAnnotation.swift; sourceTree = "<group>"; };
 		8DCBDDE120E3F8BB001E4B3E /* MKMapView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView+Extension.swift"; sourceTree = "<group>"; };
 		8DD8A0A520ACD6FE0037BEC9 /* SpriteKitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteKitViewController.swift; sourceTree = "<group>"; };
@@ -201,6 +205,8 @@
 			children = (
 				8DF868BA20BF078300308AED /* BillboardView.swift */,
 				8DF868BC20BF07CF00308AED /* BillboardView.xib */,
+				8DBE606820E531C300526983 /* WaypointView.swift */,
+				8DBE606620E531B000526983 /* WaypointView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -266,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DBC499520A24758006756C3 /* LaunchScreen.storyboard in Resources */,
+				8DBE606720E531B000526983 /* WaypointView.xib in Resources */,
 				8D26A39A20A35C2D009E66F2 /* .gitkeep in Resources */,
 				8DF868BD20BF07CF00308AED /* BillboardView.xib in Resources */,
 				8DBC499020A24757006756C3 /* Main.storyboard in Resources */,
@@ -293,6 +300,7 @@
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SwifterSwift/SwifterSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/UIImageColors/UIImageColors.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -306,6 +314,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwifterSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UIImageColors.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -340,6 +349,7 @@
 				8DCBDDE020E3F47C001E4B3E /* SensorAnnotation.swift in Sources */,
 				8D09FE7420C09C6500B01741 /* SettingsContainerViewController.swift in Sources */,
 				8D4770B320AC393000934AE0 /* ARViewController.swift in Sources */,
+				8DBE606920E531C300526983 /* WaypointView.swift in Sources */,
 				8D9696BA20B44C96005067BB /* SensorNode.swift in Sources */,
 				8D9696B720B4322E005067BB /* String+Extension.swift in Sources */,
 				8DBC498D20A24757006756C3 /* SettingsViewController.swift in Sources */,

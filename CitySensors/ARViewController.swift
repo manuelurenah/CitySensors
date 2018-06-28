@@ -6,15 +6,17 @@
 //  Copyright © 2018 Newcastle University. All rights reserved.
 //
 
-import UIKit
-import ARCL
 import ARKit
-import ChameleonFramework
+import UIKit
 import CoreLocation
 import MapKit
-import PKHUD
 import SceneKit
+
+import ARCL
+import ChameleonFramework
+import PKHUD
 import SwifterSwift
+import UIImageColors
 
 class ARViewController: UIViewController {
 
@@ -70,9 +72,9 @@ class ARViewController: UIViewController {
         let initialLocation = CLLocation(latitude: Constants.INITIAL_COORDINATES["latitude"]!, longitude: Constants.INITIAL_COORDINATES["longitude"]!)
 
         mapView.delegate = self
+        mapView.register(SensorAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         mapView.cornerRadius = mapView.bounds.height / 10
         mapView.setCenter(on: initialLocation, with: Constants.DEFAULT_RADIUS, animated: true)
-        mapView.register(SensorAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
     }
 
     func setupLocationServices() {
@@ -105,50 +107,68 @@ extension ARViewController {
 extension ARViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.last else { return }
-        self.userLocation = currentLocation
 
         if mapView.userTrackingMode == .none {
             mapView.userTrackingMode = .followWithHeading
             mapView.setCenter(currentLocation.coordinate, animated: false)
         }
 
-        let parameters = [
-            "api_key": APIConfig.API_KEY,
-            "buffer": "\(self.userLocation.coordinate.longitude),\(self.userLocation.coordinate.latitude),\(Constants.DEFAULT_RADIUS)",
-            "sensor_type": "Air Quality-and-Weather-and-Environmental",
-        ]
+        if self.userLocation.horizontalAccuracy <= currentLocation.horizontalAccuracy {
+            self.userLocation = currentLocation
 
-        ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
-            self.sensors = sensors
-            HUD.hide()
+            let parameters = [
+                "api_key": APIConfig.API_KEY,
+                "buffer": "\(self.userLocation.coordinate.longitude),\(self.userLocation.coordinate.latitude),\(Constants.DEFAULT_RADIUS)",
+                "sensor_type": "Air Quality-and-Weather-and-Environmental",
+                ]
 
-            let billboardView: BillboardView = BillboardView.fromNib()
-            
-            for sensor in self.sensors {
-                let sensorImage = UIImage(named: sensor.type)!
-                let sensorName = sensor.source.webDisplayName
-                let currentReadings = self.getSensorReadings(sensor: sensor)
-                let sensorHeight = sensor.baseHeight == -999.0 ? 50.0 : sensor.baseHeight
-                let sensorCoordinates = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[1], longitude: sensor.geometry.coordinates[0])
-                let sensorAnnotation = SensorAnnotation(title: sensor.type, coordinate: sensorCoordinates, sensorName: sensorName, sensorType: sensor.type, image: sensorImage)
+            ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
+                self.sensors = sensors
+                HUD.hide()
 
-                billboardView.titleLabel.text = sensorName
-                billboardView.iconImageView.image = sensorImage
-                billboardView.readingsLabel.text = currentReadings
+                var annotationImage = UIImage()
 
-                let location = CLLocation(coordinate: sensorCoordinates, altitude: sensorHeight)
-                let billboardImage = billboardView.takeSnapshot()
-                let annotationNode = LocationAnnotationNode(location: location, image: billboardImage)
+                for sensor in self.sensors {
+                    let sensorImage = UIImage(named: sensor.type)!
+                    let sensorName = sensor.source.webDisplayName
+                    let currentReadings = self.getSensorReadings(sensor: sensor)
+                    let sensorHeight = sensor.baseHeight == -999.0 ? 50.0 : sensor.baseHeight
+                    let sensorCoordinates = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[1], longitude: sensor.geometry.coordinates[0])
+                    let sensorAnnotation = SensorAnnotation(title: sensor.type, coordinate: sensorCoordinates, sensorName: sensorName, sensorType: sensor.type, image: sensorImage)
+                    let sensorLocation = CLLocation(coordinate: sensorCoordinates, altitude: sensorHeight)
 
-                self.sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
-                self.mapView.addAnnotation(sensorAnnotation)
-            }
-        }, onError: { error in
-            print(error)
+                    if self.userLocation.distance(from: sensorLocation) <= 20.0 {
+                        let billboardView: BillboardView = BillboardView.fromNib()
 
-            HUD.hide()
-            self.showAlert(title: "Error", message: error.localizedDescription)
-        })
+                        billboardView.titleLabel.text = sensorName
+                        billboardView.iconImageView.image = sensorImage
+                        billboardView.readingsLabel.text = currentReadings
+
+                        annotationImage = billboardView.takeSnapshot()
+                    } else {
+                        let waypointView: WaypointView = WaypointView.fromNib()
+                        let mainColors = sensorImage.getColors()
+
+                        waypointView.cornerRadius = waypointView.bounds.height / 2
+                        waypointView.iconImageView.backgroundColor = mainColors.background
+                        waypointView.carretDownImageView.image = waypointView.carretDownImageView.image?.withRenderingMode(.alwaysTemplate)
+                        waypointView.carretDownImageView.tintColor = mainColors.background
+
+                        annotationImage = waypointView.takeSnapshot()
+                    }
+
+                    let annotationNode = LocationAnnotationNode(location: sensorLocation, image: annotationImage)
+
+                    self.sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+                    self.mapView.addAnnotation(sensorAnnotation)
+                }
+            }, onError: { error in
+                print(error)
+
+                HUD.hide()
+                self.showAlert(title: "Error", message: error.localizedDescription)
+            })
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
