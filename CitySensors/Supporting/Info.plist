@@ -4,10 +4,6 @@
 <dict>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>MGLMapboxAccessToken</key>
-	<string>pk.eyJ1IjoibWFudWVsdXJlbmFoIiwiYSI6ImNqaHFwa3FybzAzaXozNm4wank3cndvbDgifQ.gkgOYBkhx_1PDBKCPK0Pmg</string>
-	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
-	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Please allow permission to use the camera to present information in AR</string>
 	<key>NSLocationUsageDescription</key>

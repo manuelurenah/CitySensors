@@ -30,40 +30,19 @@
                                             <segue destination="fQn-lA-VuI" kind="presentation" id="9bG-EC-s3b"/>
                                         </connections>
                                     </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CAX-oF-S9i" customClass="CompassMapView" customModule="CitySensors" customModuleProvider="target">
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.59999999999999998" contentMode="scaleToFill" mapType="standard" scrollEnabled="NO" rotateEnabled="NO" pitchEnabled="NO" showsUserLocation="YES" showsBuildings="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mde-18-nbU">
                                         <rect key="frame" x="8" y="539" width="120" height="120"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="120" id="9Mp-Nb-aXV"/>
-                                            <constraint firstAttribute="width" constant="120" id="QSd-Jq-kYd"/>
+                                            <constraint firstAttribute="width" constant="120" id="7bf-ek-X4b"/>
+                                            <constraint firstAttribute="height" constant="120" id="n8M-hG-Q81"/>
                                         </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="allowsZooming" value="NO"/>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="allowsScrolling" value="NO"/>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="maximumZoomLevel">
-                                                <real key="value" value="14"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="minimumZoomLevel">
-                                                <real key="value" value="10"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="zoomLevel">
-                                                <real key="value" value="14"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="latitude">
-                                                <real key="value" value="55"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="longitude">
-                                                <real key="value" value="-1.5"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/streets-v10"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </view>
+                                    </mapView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="CAX-oF-S9i" firstAttribute="leading" secondItem="z2h-60-nUa" secondAttribute="leading" constant="8" id="Yyy-Ax-ma7"/>
+                                    <constraint firstItem="Mde-18-nbU" firstAttribute="leading" secondItem="z2h-60-nUa" secondAttribute="leading" constant="8" id="06o-Aq-7X8"/>
                                     <constraint firstAttribute="trailing" secondItem="ZBS-Lx-rfb" secondAttribute="trailing" constant="8" id="aYy-L2-Efp"/>
-                                    <constraint firstAttribute="bottom" secondItem="CAX-oF-S9i" secondAttribute="bottom" constant="8" id="iee-un-s89"/>
+                                    <constraint firstAttribute="bottom" secondItem="Mde-18-nbU" secondAttribute="bottom" constant="8" id="imK-qG-XBg"/>
                                     <constraint firstAttribute="bottom" secondItem="ZBS-Lx-rfb" secondAttribute="bottom" constant="8" id="kc7-TU-YsE"/>
                                 </constraints>
                             </view>
@@ -80,7 +59,7 @@
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" id="QU0-sr-Zdx"/>
                     <connections>
-                        <outlet property="compassMapView" destination="CAX-oF-S9i" id="pPh-5X-4ir"/>
+                        <outlet property="mapView" destination="Mde-18-nbU" id="0k6-4R-pQC"/>
                         <outlet property="sceneLocationView" destination="z2h-60-nUa" id="Kt6-Rw-4mM"/>
                     </connections>
                 </viewController>

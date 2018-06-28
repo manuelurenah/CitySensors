@@ -14,5 +14,9 @@ enum APIConfig {
 }
 
 enum Constants {
-    static let DEFAULT_RADIUS = 100
+    static let DEFAULT_RADIUS: Double = 100
+    static let INITIAL_COORDINATES = [
+        "latitude": 55.002352,
+        "longitude": -1.7268829
+    ]
 }

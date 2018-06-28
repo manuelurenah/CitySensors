@@ -11,7 +11,7 @@ import ARCL
 import ARKit
 import ChameleonFramework
 import CoreLocation
-import Mapbox
+import MapKit
 import PKHUD
 import SceneKit
 import SwifterSwift
@@ -19,7 +19,7 @@ import SwifterSwift
 class ARViewController: UIViewController {
 
     @IBOutlet weak var sceneLocationView: SceneLocationView!
-    @IBOutlet weak var compassMapView: CompassMapView!
+    @IBOutlet weak var mapView: MKMapView!
 
     let locationManager = CLLocationManager()
     var userLocation = CLLocation()
@@ -29,7 +29,6 @@ class ARViewController: UIViewController {
         super.viewDidLoad()
 
         self.setStatusBarStyle(UIStatusBarStyleContrast)
-
         HUD.show(.progress, onView: self.view)
 
         locationManager.delegate = self
@@ -68,8 +67,12 @@ class ARViewController: UIViewController {
     }
 
     func setupMapView() {
-        compassMapView.delegate = self
-        compassMapView.isMapInteractive = false
+        let initialLocation = CLLocation(latitude: Constants.INITIAL_COORDINATES["latitude"]!, longitude: Constants.INITIAL_COORDINATES["longitude"]!)
+
+        mapView.delegate = self
+        mapView.cornerRadius = mapView.bounds.height / 10
+        mapView.setCenter(on: initialLocation, with: Constants.DEFAULT_RADIUS, animated: true)
+        mapView.register(SensorAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
     }
 
     func setupLocationServices() {
@@ -94,14 +97,19 @@ class ARViewController: UIViewController {
     }
 }
 
+extension ARViewController {
+    @IBAction func closeSettings(_ segue: UIStoryboardSegue) {}
+    @IBAction func saveSettings(_ segue: UIStoryboardSegue) {}
+}
+
 extension ARViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.last else { return }
         self.userLocation = currentLocation
 
-        if compassMapView.userTrackingMode == .none {
-            compassMapView.setCenter(currentLocation.coordinate, zoomLevel: 14, animated: false)
-            compassMapView.userTrackingMode = .followWithHeading
+        if mapView.userTrackingMode == .none {
+            mapView.userTrackingMode = .followWithHeading
+            mapView.setCenter(currentLocation.coordinate, animated: false)
         }
 
         let parameters = [
@@ -118,15 +126,13 @@ extension ARViewController: CLLocationManagerDelegate {
             
             for sensor in self.sensors {
                 let sensorImage = UIImage(named: sensor.type)!
-                let sensorTitle = sensor.source.webDisplayName
+                let sensorName = sensor.source.webDisplayName
                 let currentReadings = self.getSensorReadings(sensor: sensor)
-                let sensorHeight = sensor.baseHeight == -999.0 ? 10.0 : sensor.baseHeight
+                let sensorHeight = sensor.baseHeight == -999.0 ? 50.0 : sensor.baseHeight
                 let sensorCoordinates = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[1], longitude: sensor.geometry.coordinates[0])
-                let mapAnnotation = MGLPointAnnotation()
-                mapAnnotation.coordinate = sensorCoordinates
-                mapAnnotation.title = sensor.type
+                let sensorAnnotation = SensorAnnotation(title: sensor.type, coordinate: sensorCoordinates, sensorName: sensorName, sensorType: sensor.type, image: sensorImage)
 
-                billboardView.titleLabel.text = sensorTitle
+                billboardView.titleLabel.text = sensorName
                 billboardView.iconImageView.image = sensorImage
                 billboardView.readingsLabel.text = currentReadings
 
@@ -135,7 +141,7 @@ extension ARViewController: CLLocationManagerDelegate {
                 let annotationNode = LocationAnnotationNode(location: location, image: billboardImage)
 
                 self.sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
-                self.compassMapView.addAnnotation(mapAnnotation)
+                self.mapView.addAnnotation(sensorAnnotation)
             }
         }, onError: { error in
             print(error)
@@ -157,22 +163,21 @@ extension ARViewController: CLLocationManagerDelegate {
     }
 }
 
-extension ARViewController {
-    @IBAction func closeSettings(_ segue: UIStoryboardSegue) {}
-    @IBAction func saveSettings(_ segue: UIStoryboardSegue) {}
-}
+extension ARViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        guard let sensorAnnotation = annotation as? SensorAnnotation else { return nil }
 
-extension ARViewController: MGLMapViewDelegate {
-    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        let reuseIdentifier = annotation.title!!
-        var annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: reuseIdentifier)
+        let reuseIdentifier = MKMapViewDefaultAnnotationViewReuseIdentifier
+        var customAnnotationView = SensorAnnotationView()
 
-        if annotationImage == nil {
-            let image = UIImage(named: reuseIdentifier)!
-            annotationImage = MGLAnnotationImage(image: image, reuseIdentifier: reuseIdentifier)
+        if let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier) as? SensorAnnotationView {
+            annotationView.annotation = sensorAnnotation
+            customAnnotationView = annotationView
+        } else {
+            customAnnotationView = SensorAnnotationView(annotation: sensorAnnotation, reuseIdentifier: reuseIdentifier)
         }
 
-        return annotationImage
+        return customAnnotationView
     }
 }
 
