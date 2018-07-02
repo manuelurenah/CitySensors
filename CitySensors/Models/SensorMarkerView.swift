@@ -9,11 +9,15 @@
 import Foundation
 import MapKit
 
-class SensorAnnotationView: MKAnnotationView {
+class SensorMarkerView: MKMarkerAnnotationView {
     override var annotation: MKAnnotation? {
         willSet {
             guard let sensorAnnotation = newValue as? SensorAnnotation else { return }
-            image = UIImage(named: sensorAnnotation.sensorType)
+
+            canShowCallout = true
+            calloutOffset = CGPoint(x: -5, y: 5)
+            markerTintColor = sensorAnnotation.markerTintColor
+            glyphImage = UIImage(named: sensorAnnotation.sensorType)
         }
     }
 }

@@ -10,21 +10,46 @@ import Foundation
 import UIKit
 
 class BillboardView: UIView {
+
+    @IBOutlet weak var iconContainerView: UIView!
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var readingsLabel: UILabel!
-}
 
-extension UIView {
-    class func fromNib<T : UIView>() -> T {
-        return Bundle.main.loadNibNamed(String(describing: T.self), owner: nil, options: nil)![0] as! T
+    var sensorType: String! {
+        didSet {
+            switch sensorType {
+            case "Air Quality":
+                iconBackground = UIColor(hex: 0x24A789)!
+            case "Bee Hive":
+                iconBackground = UIColor(hex: 0xF46A2B)!
+            case "Environmental":
+                iconBackground = UIColor(hex: 0x1B811E)!
+            case "High Precision Air Monitor":
+                iconBackground = UIColor(hex: 0x22486B)!
+            case "River Level":
+                iconBackground = UIColor(hex: 0x182EF2)!
+            case "Tidal Level":
+                iconBackground = UIColor(hex: 0x69CDB8)!
+            case "Traffic":
+                iconBackground = UIColor(hex: 0x828282)!
+            case "Weather":
+                iconBackground = UIColor(hex: 0x6A8121)!
+            default:
+                iconBackground = UIColor.red
+            }
+        }
     }
 
-    func takeSnapshot() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(bounds.size, false, UIScreen.main.scale)
-        drawHierarchy(in: self.bounds, afterScreenUpdates: true)
-        let image = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return image
+    var iconBackground: UIColor! {
+        didSet {
+            iconContainerView.backgroundColor = iconBackground
+        }
+    }
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        iconContainerView.cornerRadius = iconContainerView.bounds.height / 2
     }
 }

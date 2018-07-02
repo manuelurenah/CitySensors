@@ -72,9 +72,9 @@ class ARViewController: UIViewController {
         let initialLocation = CLLocation(latitude: Constants.INITIAL_COORDINATES["latitude"]!, longitude: Constants.INITIAL_COORDINATES["longitude"]!)
 
         mapView.delegate = self
-        mapView.register(SensorAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
+        mapView.register(SensorMarkerView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         mapView.cornerRadius = mapView.bounds.height / 10
-        mapView.setCenter(on: initialLocation, with: Constants.DEFAULT_RADIUS, animated: true)
+        mapView.setCenter(on: initialLocation, with: Constants.DEFAULT_RADIUS, animated: false)
     }
 
     func setupLocationServices() {
@@ -132,27 +132,25 @@ extension ARViewController: CLLocationManagerDelegate {
                     let sensorImage = UIImage(named: sensor.type)!
                     let sensorName = sensor.source.webDisplayName
                     let currentReadings = self.getSensorReadings(sensor: sensor)
-                    let sensorHeight = sensor.baseHeight == -999.0 ? 50.0 : sensor.baseHeight
+                    let sensorHeight = sensor.baseHeight <= 0 ? 50.0 : sensor.baseHeight
                     let sensorCoordinates = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[1], longitude: sensor.geometry.coordinates[0])
                     let sensorAnnotation = SensorAnnotation(title: sensor.type, coordinate: sensorCoordinates, sensorName: sensorName, sensorType: sensor.type, image: sensorImage)
                     let sensorLocation = CLLocation(coordinate: sensorCoordinates, altitude: sensorHeight)
 
-                    if self.userLocation.distance(from: sensorLocation) <= 20.0 {
+                    if self.userLocation.distance(from: sensorLocation) <= 80.0 {
                         let billboardView: BillboardView = BillboardView.fromNib()
 
                         billboardView.titleLabel.text = sensorName
+                        billboardView.sensorType = sensor.type
                         billboardView.iconImageView.image = sensorImage
                         billboardView.readingsLabel.text = currentReadings
 
                         annotationImage = billboardView.takeSnapshot()
                     } else {
                         let waypointView: WaypointView = WaypointView.fromNib()
-                        let mainColors = sensorImage.getColors()
 
-                        waypointView.cornerRadius = waypointView.bounds.height / 2
-                        waypointView.iconImageView.backgroundColor = mainColors.background
-                        waypointView.carretDownImageView.image = waypointView.carretDownImageView.image?.withRenderingMode(.alwaysTemplate)
-                        waypointView.carretDownImageView.tintColor = mainColors.background
+                        waypointView.sensorType = sensor.type
+                        waypointView.iconImageView.image = sensorImage
 
                         annotationImage = waypointView.takeSnapshot()
                     }
@@ -188,13 +186,13 @@ extension ARViewController: MKMapViewDelegate {
         guard let sensorAnnotation = annotation as? SensorAnnotation else { return nil }
 
         let reuseIdentifier = MKMapViewDefaultAnnotationViewReuseIdentifier
-        var customAnnotationView = SensorAnnotationView()
+        var customAnnotationView = SensorMarkerView()
 
-        if let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier) as? SensorAnnotationView {
+        if let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier) as? SensorMarkerView {
             annotationView.annotation = sensorAnnotation
             customAnnotationView = annotationView
         } else {
-            customAnnotationView = SensorAnnotationView(annotation: sensorAnnotation, reuseIdentifier: reuseIdentifier)
+            customAnnotationView = SensorMarkerView(annotation: sensorAnnotation, reuseIdentifier: reuseIdentifier)
         }
 
         return customAnnotationView
