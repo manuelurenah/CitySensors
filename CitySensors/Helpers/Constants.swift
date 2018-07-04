@@ -14,9 +14,33 @@ enum APIConfig {
 }
 
 enum Constants {
-    static let DEFAULT_RADIUS: Double = 100
+    static let DEFAULT_RADIUS = 100
     static let INITIAL_COORDINATES = [
         "latitude": 55.002352,
         "longitude": -1.7268829
+    ]
+
+    static let KEY_RADIUS = "userRadius"
+}
+
+enum UserSettingsKeys {
+    static let AIR_QUALITY = "Air Quality"
+    static let BEE_HIVE = "Bee Hive"
+    static let ENVIRONMENTAL = "Environmental"
+    static let HIGH_PRECISION_AIR_MONITOR = "High Precision Air Monitor"
+    static let RIVER_LEVEL = "River Level"
+    static let TIDAL_LEVEL = "Tidal Level"
+    static let TRAFFIC = "Traffic"
+    static let WEATHER = "Weather"
+
+    static let INITIAL_SETUP = [
+        AIR_QUALITY: true,
+        BEE_HIVE: true,
+        ENVIRONMENTAL: true,
+        HIGH_PRECISION_AIR_MONITOR: true,
+        RIVER_LEVEL: true,
+        TIDAL_LEVEL: true,
+        TRAFFIC: true,
+        WEATHER: true,
     ]
 }

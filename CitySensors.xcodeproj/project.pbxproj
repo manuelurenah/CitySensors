@@ -10,7 +10,7 @@
 		8D055B0020E99825002A1FE0 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D055AFF20E99825002A1FE0 /* UIView+Extension.swift */; };
 		8D09FE7420C09C6500B01741 /* SettingsContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D09FE7320C09C6500B01741 /* SettingsContainerViewController.swift */; };
 		8D26A39A20A35C2D009E66F2 /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 8D26A39920A35C2D009E66F2 /* .gitkeep */; };
-		8D4770B320AC393000934AE0 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4770B220AC393000934AE0 /* ARViewController.swift */; };
+		8D4770B320AC393000934AE0 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4770B220AC393000934AE0 /* MainViewController.swift */; };
 		8D5C66C220A464D200A4E805 /* UrbanObservatorySensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C120A464D200A4E805 /* UrbanObservatorySensor.swift */; };
 		8D5C66C420A4680B00A4E805 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C320A4680B00A4E805 /* Constants.swift */; };
 		8D9696B720B4322E005067BB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9696B620B4322E005067BB /* String+Extension.swift */; };
@@ -24,6 +24,7 @@
 		8DC29C7E20E6A03E0041680D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8DC29C7D20E6A03E0041680D /* Assets.xcassets */; };
 		8DCBDDE020E3F47C001E4B3E /* SensorAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBDDDF20E3F47C001E4B3E /* SensorAnnotation.swift */; };
 		8DCBDDE220E3F8BB001E4B3E /* MKMapView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBDDE120E3F8BB001E4B3E /* MKMapView+Extension.swift */; };
+		8DD32C6620EC2CDD00082093 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD32C6520EC2CDD00082093 /* TestViewController.swift */; };
 		8DD8A0A620ACD6FE0037BEC9 /* SpriteKitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD8A0A520ACD6FE0037BEC9 /* SpriteKitViewController.swift */; };
 		8DE2EBC420A4FF6200B94D0F /* ApiHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE2EBC320A4FF6200B94D0F /* ApiHandler.swift */; };
 		8DEF4C3E20A49075009E3791 /* SensorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF4C3D20A49075009E3791 /* SensorService.swift */; };
@@ -38,7 +39,7 @@
 		8D055AFF20E99825002A1FE0 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		8D09FE7320C09C6500B01741 /* SettingsContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsContainerViewController.swift; sourceTree = "<group>"; };
 		8D26A39920A35C2D009E66F2 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
-		8D4770B220AC393000934AE0 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
+		8D4770B220AC393000934AE0 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		8D5C66C120A464D200A4E805 /* UrbanObservatorySensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrbanObservatorySensor.swift; sourceTree = "<group>"; };
 		8D5C66C320A4680B00A4E805 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		8D9696B620B4322E005067BB /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
@@ -54,6 +55,7 @@
 		8DC29C7D20E6A03E0041680D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8DCBDDDF20E3F47C001E4B3E /* SensorAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorAnnotation.swift; sourceTree = "<group>"; };
 		8DCBDDE120E3F8BB001E4B3E /* MKMapView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView+Extension.swift"; sourceTree = "<group>"; };
+		8DD32C6520EC2CDD00082093 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		8DD8A0A520ACD6FE0037BEC9 /* SpriteKitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteKitViewController.swift; sourceTree = "<group>"; };
 		8DE2EBC320A4FF6200B94D0F /* ApiHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiHandler.swift; sourceTree = "<group>"; };
 		8DEF4C3D20A49075009E3791 /* SensorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorService.swift; sourceTree = "<group>"; };
@@ -151,11 +153,12 @@
 		8DBC498920A24757006756C3 /* CitySensors */ = {
 			isa = PBXGroup;
 			children = (
-				8DC29C7D20E6A03E0041680D /* Assets.xcassets */,
-				8D4770B220AC393000934AE0 /* ARViewController.swift */,
+				8D4770B220AC393000934AE0 /* MainViewController.swift */,
 				8D09FE7320C09C6500B01741 /* SettingsContainerViewController.swift */,
 				8DBC498C20A24757006756C3 /* SettingsViewController.swift */,
 				8DD8A0A520ACD6FE0037BEC9 /* SpriteKitViewController.swift */,
+				8DD32C6520EC2CDD00082093 /* TestViewController.swift */,
+				8DC29C7D20E6A03E0041680D /* Assets.xcassets */,
 				8D9696B820B44C71005067BB /* ARModels */,
 				8D1B068220A26874007FAC3E /* Helpers */,
 				8DEF4C3F20A493E4009E3791 /* Interfaces */,
@@ -297,6 +300,7 @@
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/ChameleonFramework/ChameleonFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/DateToolsSwift/DateToolsSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/HDAugmentedReality/HDAugmentedReality.framework",
 				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
 				"${BUILT_PRODUCTS_DIR}/PKHUD/PKHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
@@ -311,6 +315,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChameleonFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DateToolsSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HDAugmentedReality.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PKHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
@@ -351,7 +356,7 @@
 			files = (
 				8DCBDDE020E3F47C001E4B3E /* SensorAnnotation.swift in Sources */,
 				8D09FE7420C09C6500B01741 /* SettingsContainerViewController.swift in Sources */,
-				8D4770B320AC393000934AE0 /* ARViewController.swift in Sources */,
+				8D4770B320AC393000934AE0 /* MainViewController.swift in Sources */,
 				8DBE606920E531C300526983 /* WaypointView.swift in Sources */,
 				8D9696BA20B44C96005067BB /* SensorNode.swift in Sources */,
 				8D9696B720B4322E005067BB /* String+Extension.swift in Sources */,
@@ -365,6 +370,7 @@
 				8DEF4C3E20A49075009E3791 /* SensorService.swift in Sources */,
 				8DD8A0A620ACD6FE0037BEC9 /* SpriteKitViewController.swift in Sources */,
 				8DCBDDE220E3F8BB001E4B3E /* MKMapView+Extension.swift in Sources */,
+				8DD32C6620EC2CDD00082093 /* TestViewController.swift in Sources */,
 				8D5C66C420A4680B00A4E805 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

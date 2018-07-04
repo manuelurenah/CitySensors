@@ -18,14 +18,17 @@ import PKHUD
 import SwifterSwift
 import UIImageColors
 
-class ARViewController: UIViewController {
+class MainViewController: UIViewController {
 
     @IBOutlet weak var sceneLocationView: SceneLocationView!
     @IBOutlet weak var mapView: MKMapView!
 
+    let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
     var userLocation = CLLocation()
     var sensors = [UrbanObservatorySensor]()
+    var isSceneReady = false
+    var sceneNeedsNodes = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,14 +77,14 @@ class ARViewController: UIViewController {
         mapView.delegate = self
         mapView.register(SensorMarkerView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         mapView.cornerRadius = mapView.bounds.height / 10
-        mapView.setCenter(on: initialLocation, with: Constants.DEFAULT_RADIUS, animated: false)
+        mapView.centerMap(on: initialLocation, with: Double(Constants.DEFAULT_RADIUS), animated: false)
     }
 
     func setupLocationServices() {
         locationManager.activityType = .fitness
         locationManager.distanceFilter = 1
         locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-        locationManager.requestLocation()
+        locationManager.startUpdatingLocation()
     }
 
     func getSensorReadings(sensor: UrbanObservatorySensor) -> String {
@@ -99,28 +102,33 @@ class ARViewController: UIViewController {
     }
 }
 
-extension ARViewController {
-    @IBAction func closeSettings(_ segue: UIStoryboardSegue) {}
-    @IBAction func saveSettings(_ segue: UIStoryboardSegue) {}
+extension MainViewController {
+    @IBAction func unwindAndCloseSettings(_ segue: UIStoryboardSegue) {}
+    @IBAction func unwindAndSaveSettings(_ segue: UIStoryboardSegue) {}
 }
 
-extension ARViewController: CLLocationManagerDelegate {
+extension MainViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.last else { return }
 
         if mapView.userTrackingMode == .none {
             mapView.userTrackingMode = .followWithHeading
-            mapView.setCenter(currentLocation.coordinate, animated: false)
+            mapView.centerMap(on: currentLocation, with: Double(Constants.DEFAULT_RADIUS))
         }
 
-        if self.userLocation.horizontalAccuracy <= currentLocation.horizontalAccuracy {
+        if currentLocation.horizontalAccuracy <= 100 {
+            manager.stopUpdatingLocation()
             self.userLocation = currentLocation
+
+            let selectedRadius = userDefaults.integer(forKey: Constants.KEY_RADIUS) == 0
+                ? Constants.DEFAULT_RADIUS
+                : userDefaults.integer(forKey: Constants.KEY_RADIUS)
 
             let parameters = [
                 "api_key": APIConfig.API_KEY,
-                "buffer": "\(self.userLocation.coordinate.longitude),\(self.userLocation.coordinate.latitude),\(Constants.DEFAULT_RADIUS)",
+                "buffer": "\(self.userLocation.coordinate.longitude),\(self.userLocation.coordinate.latitude),\(selectedRadius)",
                 "sensor_type": "Air Quality-and-Weather-and-Environmental",
-                ]
+            ]
 
             ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
                 self.sensors = sensors
@@ -137,7 +145,7 @@ extension ARViewController: CLLocationManagerDelegate {
                     let sensorAnnotation = SensorAnnotation(title: sensor.type, coordinate: sensorCoordinates, sensorName: sensorName, sensorType: sensor.type, image: sensorImage)
                     let sensorLocation = CLLocation(coordinate: sensorCoordinates, altitude: sensorHeight)
 
-                    if self.userLocation.distance(from: sensorLocation) <= 80.0 {
+                    if self.userLocation.distance(from: sensorLocation) <= 30.0 {
                         let billboardView: BillboardView = BillboardView.fromNib()
 
                         billboardView.titleLabel.text = sensorName
@@ -181,7 +189,7 @@ extension ARViewController: CLLocationManagerDelegate {
     }
 }
 
-extension ARViewController: MKMapViewDelegate {
+extension MainViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let sensorAnnotation = annotation as? SensorAnnotation else { return nil }
 
@@ -199,7 +207,7 @@ extension ARViewController: MKMapViewDelegate {
     }
 }
 
-extension ARViewController: ARSCNViewDelegate {
+extension MainViewController: ARSCNViewDelegate {
     func session(_ session: ARSession, didFailWithError error: Error) {
         showAlert(title: "Error", message: error.localizedDescription)
 
@@ -212,6 +220,15 @@ extension ARViewController: ARSCNViewDelegate {
                 sceneLocationView.orientToTrueNorth = true
                 resetSession()
             }
+        }
+    }
+
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        switch camera.trackingState {
+        case .normal:
+            isSceneReady = true
+        default:
+            isSceneReady = false
         }
     }
 }
