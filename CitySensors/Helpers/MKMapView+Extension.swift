@@ -10,10 +10,10 @@ import Foundation
 import MapKit
 
 extension MKMapView {
-    func centerMap(on location: CLLocation, with regionRadius: Double, animated: Bool = false) {
-        let regionDistance = CLLocationDistance(regionRadius)
-        let mapRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, regionDistance, regionDistance)
+    func centerMap(on location: CLLocation, delta: Double, animated: Bool = false) {
+        let span = MKCoordinateSpan(latitudeDelta: delta, longitudeDelta: delta)
+        let region = MKCoordinateRegion(center: location.coordinate, span: span)
 
-        self.setRegion(mapRegion, animated: animated)
+        self.region = region
     }
 }

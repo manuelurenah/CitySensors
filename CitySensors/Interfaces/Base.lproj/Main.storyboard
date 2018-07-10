@@ -23,17 +23,21 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZBS-Lx-rfb">
-                                        <rect key="frame" x="317" y="609" width="50" height="50"/>
+                                        <rect key="frame" x="335" y="627" width="32" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="32" id="oO0-Hj-sZO"/>
+                                            <constraint firstAttribute="height" constant="32" id="sFd-uD-HZP"/>
+                                        </constraints>
                                         <state key="normal" backgroundImage="Settings"/>
                                         <connections>
-                                            <segue destination="fQn-lA-VuI" kind="presentation" id="9bG-EC-s3b"/>
+                                            <segue destination="fQn-lA-VuI" kind="presentation" identifier="SettingsSegue" id="9bG-EC-s3b"/>
                                         </connections>
                                     </button>
                                     <mapView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.59999999999999998" contentMode="scaleToFill" mapType="standard" scrollEnabled="NO" rotateEnabled="NO" pitchEnabled="NO" showsUserLocation="YES" showsBuildings="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mde-18-nbU">
-                                        <rect key="frame" x="8" y="539" width="120" height="120"/>
+                                        <rect key="frame" x="8" y="509" width="150" height="150"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="120" id="7bf-ek-X4b"/>
-                                            <constraint firstAttribute="height" constant="120" id="n8M-hG-Q81"/>
+                                            <constraint firstAttribute="width" constant="150" id="7bf-ek-X4b"/>
+                                            <constraint firstAttribute="height" constant="150" id="n8M-hG-Q81"/>
                                         </constraints>
                                     </mapView>
                                 </subviews>
@@ -582,46 +586,6 @@
                 <exit id="J9C-kH-lwa" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="4493.6000000000004" y="107.49625187406298"/>
-        </scene>
-        <!--Test View Controller-->
-        <scene sceneID="JAh-eS-yxj">
-            <objects>
-                <viewController id="AqQ-Gh-rQD" customClass="TestViewController" customModule="CitySensors" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Qk3-bT-hra">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.60000002384185791" contentMode="scaleToFill" mapType="standard" scrollEnabled="NO" rotateEnabled="NO" pitchEnabled="NO" showsUserLocation="YES" showsBuildings="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t8I-d5-mCR">
-                                <rect key="frame" x="16" y="527" width="120" height="120"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="7CI-Jk-sD8"/>
-                                    <constraint firstAttribute="height" constant="120" id="Fh0-oB-SIV"/>
-                                </constraints>
-                            </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I3H-Pw-DF0">
-                                <rect key="frame" x="327" y="615" width="32" height="32"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="32" id="Mcb-hu-6xh"/>
-                                    <constraint firstAttribute="width" constant="32" id="U1p-St-84S"/>
-                                </constraints>
-                                <state key="normal" backgroundImage="Settings"/>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" red="0.15868747234344482" green="0.21822044253349304" blue="0.30320093035697937" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstItem="vh7-vc-xcg" firstAttribute="trailing" secondItem="I3H-Pw-DF0" secondAttribute="trailing" constant="16" id="JBC-he-4aq"/>
-                            <constraint firstItem="vh7-vc-xcg" firstAttribute="bottom" secondItem="t8I-d5-mCR" secondAttribute="bottom" constant="20" id="Xbx-YF-x2b"/>
-                            <constraint firstItem="t8I-d5-mCR" firstAttribute="leading" secondItem="vh7-vc-xcg" secondAttribute="leading" constant="16" id="etW-vh-jcW"/>
-                            <constraint firstItem="vh7-vc-xcg" firstAttribute="bottom" secondItem="I3H-Pw-DF0" secondAttribute="bottom" constant="20" id="prg-FY-egp"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="vh7-vc-xcg"/>
-                    </view>
-                    <extendedEdge key="edgesForExtendedLayout"/>
-                    <navigationItem key="navigationItem" id="bOH-yY-BKN"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="00N-X9-LFM" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3671" y="883"/>
         </scene>
     </scenes>
     <resources>
