@@ -11,10 +11,12 @@ import UIKit
 
 class BillboardView: UIView {
 
-    @IBOutlet weak var iconContainerView: UIView!
+    @IBOutlet weak var titleContainerView: UIView!
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var readingsLabel: UILabel!
+    @IBOutlet weak var billboardContainerView: UIView!
+    @IBOutlet weak var latestReadingLabel: UILabel!
 
     var sensorType: String! {
         didSet {
@@ -36,20 +38,20 @@ class BillboardView: UIView {
             case "Weather":
                 iconBackground = UIColor(hex: 0x6A8121)!
             default:
-                iconBackground = UIColor.red
+                iconBackground = .red
             }
         }
     }
 
     var iconBackground: UIColor! {
         didSet {
-            iconContainerView.backgroundColor = iconBackground
+            titleContainerView.backgroundColor = iconBackground
         }
     }
 
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        iconContainerView.cornerRadius = iconContainerView.bounds.height / 2
+        billboardContainerView.cornerRadius = billboardContainerView.bounds.height / 20
     }
 }

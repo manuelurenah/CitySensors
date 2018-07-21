@@ -16,10 +16,31 @@ class SensorNode: LocationAnnotationNode {
 
     var sensor: UrbanObservatorySensor?
 
-    init(sensor: UrbanObservatorySensor, location: CLLocation?, image: UIImage) {
-        super.init(location: location, image: image)
-
+    init(location: CLLocation?, sensor: UrbanObservatorySensor, asWaypoint: Bool) {
         self.sensor = sensor
+
+        var nodeImage = UIImage()
+
+        if asWaypoint {
+            let waypointView: WaypointView = WaypointView.fromNib()
+
+            waypointView.sensorType = sensor.type
+            waypointView.iconImageView.image = UIImage(named: sensor.type)
+
+            nodeImage = waypointView.takeSnapshot()
+        } else {
+            let billboardView: BillboardView = BillboardView.fromNib()
+
+            billboardView.titleLabel.text = sensor.source.webDisplayName
+            billboardView.sensorType = sensor.type
+            billboardView.iconImageView.image = UIImage(named: sensor.type)
+            billboardView.readingsLabel.text = sensor.getReadings()
+            billboardView.latestReadingLabel.text = Date(dateString: sensor.latestReading, format: Constants.DEFAULT_DATE_FORMAT).timeAgoSinceNow
+
+            nodeImage = billboardView.takeSnapshot()
+        }
+
+        super.init(location: location, image: nodeImage)
     }
 
     required init?(coder aDecoder: NSCoder) {

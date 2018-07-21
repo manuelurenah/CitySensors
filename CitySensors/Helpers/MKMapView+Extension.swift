@@ -16,4 +16,8 @@ extension MKMapView {
 
         self.region = region
     }
+
+    func removeAllOverlays() {
+        self.removeOverlays(self.overlays)
+    }
 }

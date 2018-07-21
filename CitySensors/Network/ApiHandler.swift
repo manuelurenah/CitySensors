@@ -14,24 +14,44 @@ class ApiHandler {
     static let provider = MoyaProvider<SensorService>()
     static let disposeBag = DisposeBag()
 
-    static func getLiveSensorData(with parameters: [String : Any], onSuccess: @escaping ([UrbanObservatorySensor])->(), onError: @escaping (Error)->()) {
+    private static func decodeSensors(sensorData: Data) -> [UrbanObservatorySensor] {
+        var sensors = [UrbanObservatorySensor]()
+        do {
+            let decoder = JSONDecoder()
+            decoder.nonConformingFloatDecodingStrategy = .convertFromString(
+                positiveInfinity: "+Infinity",
+                negativeInfinity: "-Infinity",
+                nan: "NaN"
+            )
+
+            sensors = try decoder.decode([UrbanObservatorySensor].self, from: sensorData)
+        } catch let error {
+            print(error)
+        }
+
+        return sensors;
+    }
+
+    static func getLiveSensorData(with parameters: [String: Any], onSuccess: @escaping ([UrbanObservatorySensor])->(), onError: @escaping (Error)->()) {
         provider.rx.request(.getLiveSensorData(parameters: parameters)).subscribe { event in
             switch event {
             case let .success(response):
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.nonConformingFloatDecodingStrategy = .convertFromString(
-                        positiveInfinity: "+Infinity",
-                        negativeInfinity: "-Infinity",
-                        nan: "NaN"
-                    )
+                let sensors = decodeSensors(sensorData: response.data)
 
-                    let sensors = try decoder.decode([UrbanObservatorySensor].self, from: response.data)
+                onSuccess(sensors)
+            case let .error(error):
+                onError(error)
+            }
+        }.disposed(by: disposeBag)
+    }
 
-                    onSuccess(sensors)
-                } catch let error {
-                    onError(error)
-                }
+    static func getSensors(with parameters: [String: Any], onSuccess: @escaping ([UrbanObservatorySensor])->(), onError: @escaping (Error)->()) {
+        provider.rx.request(.getSensors(parameters: parameters)).subscribe { event in
+            switch event {
+            case let .success(response):
+                let sensors = decodeSensors(sensorData: response.data)
+
+                onSuccess(sensors)
             case let .error(error):
                 onError(error)
             }

@@ -158,7 +158,6 @@
 				8DEF4C3F20A493E4009E3791 /* Interfaces */,
 				8D1B068020A26863007FAC3E /* Models */,
 				8DEF4C3C20A49061009E3791 /* Network */,
-				8DEF4C4120A493F4009E3791 /* Resources */,
 				8DEF4C4020A493EE009E3791 /* Supporting */,
 				8D1B068120A26869007FAC3E /* ViewModels */,
 				8DF868B920BF075900308AED /* Views */,
@@ -191,13 +190,6 @@
 				8DBC499620A24758006756C3 /* Info.plist */,
 			);
 			path = Supporting;
-			sourceTree = "<group>";
-		};
-		8DEF4C4120A493F4009E3791 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		8DF868B920BF075900308AED /* Views */ = {

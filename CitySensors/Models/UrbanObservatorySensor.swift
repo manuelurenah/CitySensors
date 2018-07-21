@@ -9,7 +9,7 @@
 import Foundation
 
 // MARK: - Sensor struct Model
-struct UrbanObservatorySensor: Codable {
+class UrbanObservatorySensor: Codable {
     struct Geometry: Codable {
         let coordinates: [Double]
         let type: String
@@ -47,7 +47,7 @@ struct UrbanObservatorySensor: Codable {
     let active: String
     let type: String
     let source: Source
-    let data: [String:Value]
+    let data: [String: Value]
     let baseHeight: Double
     let sensorHeight: String
     let name: String
@@ -64,7 +64,7 @@ struct UrbanObservatorySensor: Codable {
         case name
     }
 
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         latestReading = try container.decode(String.self, forKey: .latestReading)
@@ -93,5 +93,14 @@ struct UrbanObservatorySensor: Codable {
         }
 
         name = try container.decode(String.self, forKey: .name)
+    }
+
+    func getReadings() -> String {
+        return data.reduce("") { (result, entry) in
+            guard let currentReading = entry.value.data.first?.value else { return "" }
+            let formattedReading = String(format: "%.2f", currentReading)
+
+            return result + "\(entry.key): \(formattedReading) \(entry.value.meta.units)\n"
+        }
     }
 }

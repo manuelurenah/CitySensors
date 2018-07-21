@@ -14,6 +14,7 @@ import SceneKit
 
 import ARCL
 import ChameleonFramework
+import DateToolsSwift
 import PKHUD
 import SwifterSwift
 import UIImageColors
@@ -53,18 +54,17 @@ class MainViewController: UIViewController {
         HUD.show(.progress, onView: self.view)
 
         switch CLLocationManager.authorizationStatus() {
-        case .authorizedWhenInUse:
+        case .authorizedAlways,
+             .authorizedWhenInUse:
             setupLocationServices()
         case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
+            locationManager.requestAlwaysAuthorization()
         default:
             showAlert(title: "Location Services", message: "Please enable the location services")
         }
 
         setupSceneView()
         setupMapView()
-
-        fetchSensorsDataTimer = startFetchTimer()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -78,48 +78,33 @@ class MainViewController: UIViewController {
         super.viewWillDisappear(animated)
 
         sceneLocationView.pause()
+
+        guard let timer = fetchSensorsDataTimer else { return }
+        timer.invalidate()
     }
 
     // MARK: - Class Methods
     private func addNodesToScene() {
-        var annotationImage = UIImage()
-
         for sensor in self.sensors {
-            let sensorImage = UIImage(named: sensor.type)!
-            let sensorName = sensor.source.webDisplayName
-            let currentReadings = self.getSensorReadings(sensor: sensor)
-            let sensorHeight = sensor.baseHeight <= 0 ? 20.0 : sensor.baseHeight
-            let sensorCoordinates = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[1], longitude: sensor.geometry.coordinates[0])
-            let sensorAnnotation = SensorAnnotation(title: sensor.type, coordinate: sensorCoordinates, sensorName: sensorName, sensorType: sensor.type, image: sensorImage)
-            let sensorLocation = CLLocation(coordinate: sensorCoordinates, altitude: sensorHeight)
+            DispatchQueue.main.async {
+                let sensorImage = UIImage(named: sensor.type)!
+                let sensorName = sensor.source.webDisplayName
+                let sensorHeight = sensor.baseHeight < Constants.DEFAULT_SENSOR_HEIGHT
+                    ? Constants.DEFAULT_SENSOR_HEIGHT
+                    : sensor.baseHeight
+                let sensorCoordinates = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[1], longitude: sensor.geometry.coordinates[0])
+                let sensorAnnotation = SensorAnnotation(title: sensor.type, coordinate: sensorCoordinates, sensorName: sensorName, sensorType: sensor.type, image: sensorImage)
+                let sensorLocation = CLLocation(coordinate: sensorCoordinates, altitude: sensorHeight)
+                let shouldDisplayWaypoint = self.userLocation.distance(from: sensorLocation) > 100
+                let annotationNode = SensorNode(location: sensorLocation, sensor: sensor, asWaypoint: shouldDisplayWaypoint)
 
-            self.addRegionAndOverlay(for: sensorAnnotation, radius: 20.0)
+                self.addRegionAndOverlay(for: sensorAnnotation, radius: Constants.DEFAULT_GEOFENCE_RADIUS)
+                self.sceneNodes.append(annotationNode)
+                self.mapAnnotations.append(sensorAnnotation)
 
-            if self.userLocation.distance(from: sensorLocation) <= 20.0 {
-                let billboardView: BillboardView = BillboardView.fromNib()
-
-                billboardView.titleLabel.text = sensorName
-                billboardView.sensorType = sensor.type
-                billboardView.iconImageView.image = sensorImage
-                billboardView.readingsLabel.text = currentReadings
-
-                annotationImage = billboardView.takeSnapshot()
-            } else {
-                let waypointView: WaypointView = WaypointView.fromNib()
-
-                waypointView.sensorType = sensor.type
-                waypointView.iconImageView.image = sensorImage
-
-                annotationImage = waypointView.takeSnapshot()
+                self.sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+                self.mapView.addAnnotation(sensorAnnotation)
             }
-
-            let annotationNode = LocationAnnotationNode(location: sensorLocation, image: annotationImage)
-
-            self.sceneNodes.append(annotationNode)
-            self.mapAnnotations.append(sensorAnnotation)
-
-            self.sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
-            self.mapView.addAnnotation(sensorAnnotation)
         }
     }
 
@@ -169,18 +154,9 @@ class MainViewController: UIViewController {
         })
     }
 
-    private func getSensorReadings(sensor: UrbanObservatorySensor) -> String {
-        return sensor.data.reduce("") { (result, entry) in
-            guard let currentReading = entry.value.data.first?.value else { return "" }
-            let formattedReading = String(format: "%.2f", currentReading)
-
-            return result + "\(entry.key): \(formattedReading) \(entry.value.meta.units)\n"
-        }
-    }
-
     private func removeAllNodes() {
         stopMonitoringRegions(annotations: mapAnnotations)
-        removeMapOverlays()
+        mapView.removeAllOverlays()
 
         for node in sceneNodes {
             sceneLocationView.removeLocationNode(locationNode: node)
@@ -191,12 +167,6 @@ class MainViewController: UIViewController {
         mapAnnotations.removeAll()
     }
 
-    private func removeMapOverlays() {
-        let overlays = mapView.overlays
-
-        mapView.removeOverlays(overlays)
-    }
-
     private func resetSession() {
         sceneLocationView.pause()
         sceneLocationView.run()
@@ -204,6 +174,7 @@ class MainViewController: UIViewController {
 
     private func setupLocationServices() {
         locationManager.delegate = self
+        locationManager.distanceFilter = 10
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
     }
 
@@ -249,19 +220,6 @@ extension MainViewController {
     }
 }
 
-// MARK: - UINavigation
-extension MainViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier {
-        case "SettingsSegue":
-            guard let timer = fetchSensorsDataTimer else { return }
-            timer.invalidate()
-        default:
-            return
-        }
-    }
-}
-
 // MARK: - CLLocationManagerDelegate
 extension MainViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -271,13 +229,13 @@ extension MainViewController: CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        print("did enter region \(region.identifier)")
+        showAlert(title: "Entered Region", message: "did enter region \(region.identifier)")
         removeAllNodes()
         addNodesToScene()
     }
 
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        print("did exit region \(region.identifier)")
+        showAlert(title: "Exited Region", message: "did exit region \(region.identifier)")
         removeAllNodes()
         addNodesToScene()
     }
@@ -288,7 +246,7 @@ extension MainViewController: CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
-        removeMapOverlays()
+        mapView.removeAllOverlays()
         showAlert(title: "Error", message: "An error ocurred while setting the region: \(error.localizedDescription)")
     }
 }
@@ -321,13 +279,8 @@ extension MainViewController: MKMapViewDelegate {
 
             return circleRenderer
         }
-        return MKOverlayRenderer(overlay: overlay)
-    }
 
-    func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
-        if mode == .none {
-            mapView.userTrackingMode = .followWithHeading
-        }
+        return MKOverlayRenderer(overlay: overlay)
     }
 }
 

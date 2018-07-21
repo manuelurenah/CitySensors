@@ -28,7 +28,9 @@ class SettingsContainerViewController: UIViewController {
         navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationBar.shadowImage = UIImage()
 
-        loadStoredSettings()
+        if userDefaults.integer(forKey: Constants.KEY_RADIUS) != 0 {
+            loadStoredSettings()
+        }
     }
 
     // MARK: - Class Methods
@@ -52,7 +54,9 @@ extension SettingsContainerViewController {
         case "EmbeddedSettingsSegue":
             let settingViewController = segue.destination as! SettingsViewController
 
-            loadStoredSettings()
+            if userDefaults.integer(forKey: Constants.KEY_RADIUS) != 0 {
+                loadStoredSettings()
+            }
 
             settingViewController.selectedRadius = selectedRadius
             settingViewController.selectedSensorTypes = selectedSensorTypes
