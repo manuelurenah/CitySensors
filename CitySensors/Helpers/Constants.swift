@@ -15,6 +15,7 @@ enum APIConfig {
 
 enum Constants {
     static let DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
+    static let API_DATE_FORMAT = "yyyyMMddHHmmss"
 
     static let DEFAULT_RADIUS = 100
     static let DEFAULT_SENSOR_HEIGHT = 50.0

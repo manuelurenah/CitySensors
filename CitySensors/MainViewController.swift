@@ -30,6 +30,7 @@ class MainViewController: UIViewController {
     let locationManager = CLLocationManager()
     var userLocation = CLLocation()
     var sensors = [UrbanObservatorySensor]()
+    var lastDaySensors = [UrbanObservatorySensor]()
     var isSceneReady = false
     var sceneNeedsNodes = true
     var sceneNodes = [LocationNode]()
@@ -54,17 +55,19 @@ class MainViewController: UIViewController {
         HUD.show(.progress, onView: self.view)
 
         switch CLLocationManager.authorizationStatus() {
-        case .authorizedAlways,
-             .authorizedWhenInUse:
-            setupLocationServices()
         case .notDetermined:
-            locationManager.requestAlwaysAuthorization()
+            locationManager.requestWhenInUseAuthorization()
+        case .authorizedAlways, .authorizedWhenInUse:
+            setupLocationServices()
         default:
-            showAlert(title: "Location Services", message: "Please enable the location services")
+            showAlert(title: "Location Services", message: "CitySensors requires location services to work correctly")
         }
 
         setupSceneView()
         setupMapView()
+        setupLocationServices()
+
+        getLastDayReadings()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -109,6 +112,11 @@ class MainViewController: UIViewController {
     }
 
     private func addRegionAndOverlay(for annotation: MKAnnotation, radius: Double) {
+        if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
+            showAlert(title:"Error", message: "Geofencing is not supported on this device!")
+            return
+        }
+
         let region = CLCircularRegion(center: annotation.coordinate, radius: radius, identifier: "Geofence-\(annotation.coordinate.latitude)-\(annotation.coordinate.longitude)")
         region.notifyOnExit = true
         region.notifyOnEntry = true
@@ -118,6 +126,23 @@ class MainViewController: UIViewController {
     }
 
     @objc func fetchSensorsData() {
+        guard let parameters = getBaseParameters() else { return }
+
+        ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
+            self.sensors = sensors
+            HUD.hide()
+
+            self.removeAllNodes()
+            self.addNodesToScene()
+        }, onError: { error in
+            print(error)
+
+            HUD.hide()
+            self.showAlert(title: "Error", message: error.localizedDescription)
+        })
+    }
+
+    private func getBaseParameters() -> [String: Any]? {
         let selectedRadius = userDefaults.integer(forKey: Constants.KEY_RADIUS) == 0
             ? Constants.DEFAULT_RADIUS
             : userDefaults.integer(forKey: Constants.KEY_RADIUS)
@@ -131,26 +156,30 @@ class MainViewController: UIViewController {
             }
         }
 
-        guard let currentLocation = locationManager.location else { return }
+        guard let currentLocation = locationManager.location else { return nil }
         userLocation = currentLocation
 
-        let parameters = [
+         return [
             "api_key": APIConfig.API_KEY,
             "buffer": "\(userLocation.coordinate.longitude),\(userLocation.coordinate.latitude),\(selectedRadius)",
             "sensor_type": selectedSensors.count > 0 ? selectedSensors.joined(separator: "-and-") : ""
         ]
+    }
 
-        ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
-            self.sensors = sensors
-            HUD.hide()
+    private func getLastDayReadings() {
+        guard var parameters = getBaseParameters() else { return }
+        let yesterday = Date().subtract(1.days).start(of: .day)
+        parameters["start_time"] = yesterday.format(with: Constants.API_DATE_FORMAT)
+        parameters["end_time"] = yesterday.end(of: .day).format(with: Constants.API_DATE_FORMAT)
 
-            self.removeAllNodes()
-            self.addNodesToScene()
+        ApiHandler.getSensorsData(with: parameters, onSuccess: { sensors in
+            self.lastDaySensors = sensors
+            sensors.forEach { sensor in
+                let averageReadings = sensor.getAverageReadings()
+                print(sensor.getReadings(values: averageReadings))
+            }
         }, onError: { error in
             print(error)
-
-            HUD.hide()
-            self.showAlert(title: "Error", message: error.localizedDescription)
         })
     }
 
@@ -176,6 +205,7 @@ class MainViewController: UIViewController {
         locationManager.delegate = self
         locationManager.distanceFilter = 10
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager.requestWhenInUseAuthorization()
     }
 
     private func setupMapView() {
@@ -223,21 +253,32 @@ extension MainViewController {
 // MARK: - CLLocationManagerDelegate
 extension MainViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedAlways || status == .authorizedWhenInUse {
+        switch status {
+        case .authorizedAlways:
             setupLocationServices()
+        case .authorizedWhenInUse:
+            locationManager.requestAlwaysAuthorization()
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .restricted, .denied:
+            showAlert(title: "Location Services", message: "CitySensors requires location services to work correctly")
         }
     }
 
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        showAlert(title: "Entered Region", message: "did enter region \(region.identifier)")
-        removeAllNodes()
-        addNodesToScene()
+        if region is CLCircularRegion {
+            showAlert(title: "Entered Region", message: "did enter region \(region.identifier)")
+            removeAllNodes()
+            addNodesToScene()
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        showAlert(title: "Exited Region", message: "did exit region \(region.identifier)")
-        removeAllNodes()
-        addNodesToScene()
+        if region is CLCircularRegion {
+            showAlert(title: "Exited Region", message: "did exit region \(region.identifier)")
+            removeAllNodes()
+            addNodesToScene()
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -257,13 +298,13 @@ extension MainViewController: MKMapViewDelegate {
         guard let sensorAnnotation = annotation as? SensorAnnotation else { return nil }
 
         let reuseIdentifier = MKMapViewDefaultAnnotationViewReuseIdentifier
-        var customAnnotationView = SensorMarkerView()
+        var customAnnotationView = MKAnnotationView()
 
         if let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier) as? SensorMarkerView {
             annotationView.annotation = sensorAnnotation
             customAnnotationView = annotationView
         } else {
-            customAnnotationView = SensorMarkerView(annotation: sensorAnnotation, reuseIdentifier: reuseIdentifier)
+            customAnnotationView = MKAnnotationView(annotation: sensorAnnotation, reuseIdentifier: reuseIdentifier)
         }
 
         return customAnnotationView
@@ -292,6 +333,8 @@ extension MainViewController: SceneLocationViewDelegate {
     func sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: SceneLocationView, node: LocationNode) {}
 
     func sceneLocationViewDidSetupSceneNode(sceneLocationView: SceneLocationView, sceneNode: SCNNode) {
+        guard let currentPosition = sceneLocationView.currentLocation() else { return }
+        showAlert(title: "Current Position", message: "\(currentPosition)")
         fetchSensorsData()
     }
 

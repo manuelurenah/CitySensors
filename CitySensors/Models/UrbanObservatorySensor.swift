@@ -38,7 +38,7 @@ class UrbanObservatorySensor: Codable {
             let theme: String
         }
 
-        let data: [String:Double]
+        let data: [String: Double]
         let meta: Meta
     }
 
@@ -95,12 +95,29 @@ class UrbanObservatorySensor: Codable {
         name = try container.decode(String.self, forKey: .name)
     }
 
-    func getReadings() -> String {
-        return data.reduce("") { (result, entry) in
+    func getReadings(values: [String: Value]? = nil) -> String {
+        let source = values ?? data
+        return source.reduce("") { (result, entry) in
             guard let currentReading = entry.value.data.first?.value else { return "" }
             let formattedReading = String(format: "%.2f", currentReading)
 
             return result + "\(entry.key): \(formattedReading) \(entry.value.meta.units)\n"
         }
+    }
+
+    func getAverageReadings() -> [String: Value] {
+        var averageReadings = [String: Value]()
+
+        data.forEach { item in
+            let (environmentVariable, value) = item
+            let valuesCount = Double(value.data.count)
+            let averageValue = value.data.reduce(0.0) { (result, entry) in result + entry.value } / valuesCount
+            let newData = [environmentVariable: averageValue]
+            let newValue = Value(data: newData, meta: value.meta)
+
+            averageReadings[environmentVariable] = newValue
+        }
+
+        return averageReadings
     }
 }

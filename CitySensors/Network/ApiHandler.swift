@@ -45,7 +45,7 @@ class ApiHandler {
         }.disposed(by: disposeBag)
     }
 
-    static func getSensors(with parameters: [String: Any], onSuccess: @escaping ([UrbanObservatorySensor])->(), onError: @escaping (Error)->()) {
+    static func getSensorsData(with parameters: [String: Any], onSuccess: @escaping ([UrbanObservatorySensor])->(), onError: @escaping (Error)->()) {
         provider.rx.request(.getSensors(parameters: parameters)).subscribe { event in
             switch event {
             case let .success(response):

@@ -6,12 +6,10 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Please allow permission to use the camera to present information in AR</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We need your location to get the nearby sensors around you</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We need your location to get the nearby sensors around you</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to get the nearby sensors around you</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We need your location to get the nearby sensors around you</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need your location to get the nearby sensors around you</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

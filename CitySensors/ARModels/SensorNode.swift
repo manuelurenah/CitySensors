@@ -14,7 +14,7 @@ import SceneKit
 
 class SensorNode: LocationAnnotationNode {
 
-    var sensor: UrbanObservatorySensor?
+    var sensor: UrbanObservatorySensor
 
     init(location: CLLocation?, sensor: UrbanObservatorySensor, asWaypoint: Bool) {
         self.sensor = sensor
