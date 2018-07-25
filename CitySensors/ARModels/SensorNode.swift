@@ -15,35 +15,25 @@ import SceneKit
 class SensorNode: LocationAnnotationNode {
 
     var sensor: UrbanObservatorySensor
+    var waypointImage = UIImage()
+    var todayImage = UIImage()
+    var isWaypoint = true
 
-    init(location: CLLocation?, sensor: UrbanObservatorySensor, asWaypoint: Bool) {
+    init(location: CLLocation?, sensor: UrbanObservatorySensor, isWaypoint: Bool) {
         self.sensor = sensor
+        self.isWaypoint = isWaypoint
+        self.todayImage = sensor.buildBillboardImage()
+        self.waypointImage = sensor.buildWaypointImage()
 
-        var nodeImage = UIImage()
-
-        if asWaypoint {
-            let waypointView: WaypointView = WaypointView.fromNib()
-
-            waypointView.sensorType = sensor.type
-            waypointView.iconImageView.image = UIImage(named: sensor.type)
-
-            nodeImage = waypointView.takeSnapshot()
-        } else {
-            let billboardView: BillboardView = BillboardView.fromNib()
-
-            billboardView.titleLabel.text = sensor.source.webDisplayName
-            billboardView.sensorType = sensor.type
-            billboardView.iconImageView.image = UIImage(named: sensor.type)
-            billboardView.readingsLabel.text = sensor.getReadings()
-            billboardView.latestReadingLabel.text = Date(dateString: sensor.latestReading, format: Constants.DEFAULT_DATE_FORMAT).timeAgoSinceNow
-
-            nodeImage = billboardView.takeSnapshot()
-        }
-
-        super.init(location: location, image: nodeImage)
+        super.init(location: location, image: isWaypoint ? self.waypointImage : self.todayImage)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func toggleView() {
+        print("toggleView")
+        isWaypoint = !isWaypoint
     }
 }

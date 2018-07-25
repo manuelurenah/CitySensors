@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 // MARK: - Sensor struct Model
 class UrbanObservatorySensor: Codable {
@@ -119,5 +120,26 @@ class UrbanObservatorySensor: Codable {
         }
 
         return averageReadings
+    }
+
+    func buildBillboardImage() -> UIImage {
+        let billboardView: BillboardView = BillboardView.fromNib()
+
+        billboardView.titleLabel.text = source.webDisplayName
+        billboardView.sensorType = type
+        billboardView.iconImageView.image = UIImage(named: type)
+        billboardView.readingsLabel.text = getReadings()
+        billboardView.latestReadingLabel.text = Date(dateString: latestReading, format: Constants.DEFAULT_DATE_FORMAT).timeAgoSinceNow
+
+        return billboardView.takeSnapshot()
+    }
+
+    func buildWaypointImage() -> UIImage {
+        let waypointView: WaypointView = WaypointView.fromNib()
+
+        waypointView.sensorType = type
+        waypointView.iconImageView.image = UIImage(named: type)
+
+        return waypointView.takeSnapshot()
     }
 }
