@@ -19,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
 
+        UserDefaults.standard.register(defaults: UserSettingsKeys.INITIAL_SETUP)
+
         return true
     }
 

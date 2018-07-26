@@ -58,7 +58,7 @@ class MainViewController: UIViewController {
 
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
+            locationManager.requestAlwaysAuthorization()
         case .authorizedAlways, .authorizedWhenInUse:
             setupLocationServices()
         default:
@@ -68,14 +68,17 @@ class MainViewController: UIViewController {
         setupSceneView()
         setupMapView()
         setupLocationServices()
-        fetchLastDayReadings()
+//        fetchLastDayReadings()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         sceneLocationView.run()
-        fetchSensorsDataTimer = startFetchTimer()
+
+        if !lastDaySensors.isEmpty {
+            fetchSensorsDataTimer = startFetchTimer()
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -89,7 +92,7 @@ class MainViewController: UIViewController {
 
     // MARK: - Class Methods
     private func addNodesToScene() {
-        for sensor in self.sensors {
+        for (index, sensor) in sensors.enumerated() {
             DispatchQueue.main.async {
                 let sensorImage = UIImage(named: sensor.type)!
                 let sensorName = sensor.source.webDisplayName
@@ -100,7 +103,7 @@ class MainViewController: UIViewController {
                 let sensorAnnotation = SensorAnnotation(title: sensor.type, coordinate: sensorCoordinates, sensorName: sensorName, sensorType: sensor.type, image: sensorImage)
                 let sensorLocation = CLLocation(coordinate: sensorCoordinates, altitude: sensorHeight)
                 let shouldDisplayWaypoint = self.userLocation.distance(from: sensorLocation) > 100
-                let sensorNode = SensorNode(location: sensorLocation, sensor: sensor, isWaypoint: shouldDisplayWaypoint)
+                let sensorNode = SensorNode(location: sensorLocation, sensor: sensor, lastDaySensor: self.lastDaySensors[index], isWaypoint: shouldDisplayWaypoint)
 
                 self.addRegionAndOverlay(for: sensorAnnotation, radius: Constants.DEFAULT_GEOFENCE_RADIUS)
                 self.sceneNodes.append(sensorNode)
@@ -126,21 +129,47 @@ class MainViewController: UIViewController {
         locationManager.startMonitoring(for: region)
     }
 
-    @objc func fetchSensorsLiveData() {
-        guard let parameters = getBaseParameters() else { return }
+    private func fetchLastDayReadings() {
+        print("fetching historical data")
+        guard var parameters = getBaseParameters() else { return }
+        let yesterday = Date().subtract(7.days).start(of: .day)
+        parameters["start_time"] = yesterday.format(with: Constants.API_DATE_FORMAT)
+        parameters["end_time"] = yesterday.end(of: .day).format(with: Constants.API_DATE_FORMAT)
 
-        ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
-            self.sensors = sensors
-            HUD.hide()
-
-            self.removeAllNodes()
-            self.addNodesToScene()
+        ApiHandler.getSensorsData(with: parameters, onSuccess: { sensors in
+            print("got historical")
+            self.lastDaySensors = sensors
+            print(sensors)
+            self.fetchSensorsDataTimer = self.startFetchTimer()
         }, onError: { error in
             print(error)
 
             HUD.hide()
-            self.showAlert(title: "Error", message: error.localizedDescription)
+            self.showAlert(title: "Error", message: "An error ocurred while fetching the sensors data: \(error.localizedDescription)")
         })
+    }
+
+    @objc func fetchSensorsLiveData() {
+        print("fetching live data")
+        if !lastDaySensors.isEmpty {
+            guard let parameters = getBaseParameters() else { return }
+
+            ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
+                print("got live")
+                self.sensors = sensors
+                HUD.hide()
+
+                self.removeAllNodes()
+                self.addNodesToScene()
+            }, onError: { error in
+                print(error)
+
+                HUD.hide()
+                self.showAlert(title: "Error", message: "An error occured while fetching live data: \(error.localizedDescription)")
+            })
+        } else {
+            print("still empty")
+        }
     }
 
     private func getBaseParameters() -> [String: Any]? {
@@ -167,23 +196,6 @@ class MainViewController: UIViewController {
         ]
     }
 
-    private func fetchLastDayReadings() {
-        guard var parameters = getBaseParameters() else { return }
-        let yesterday = Date().subtract(1.days).start(of: .day)
-        parameters["start_time"] = yesterday.format(with: Constants.API_DATE_FORMAT)
-        parameters["end_time"] = yesterday.end(of: .day).format(with: Constants.API_DATE_FORMAT)
-
-        ApiHandler.getSensorsData(with: parameters, onSuccess: { sensors in
-            self.lastDaySensors = sensors
-            sensors.forEach { sensor in
-                let averageReadings = sensor.getAverageReadings()
-                print(sensor.getReadings(values: averageReadings))
-            }
-        }, onError: { error in
-            print(error)
-        })
-    }
-
     @objc private func handleSceneViewTap(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             let sceneView = sender.view as! SceneLocationView
@@ -201,7 +213,7 @@ class MainViewController: UIViewController {
 
                 let selectedNode = firstResult.node
                 let sensorNode = selectedNode.parent as! SensorNode
-                selectedNode.geometry?.firstMaterial?.diffuse.contents = sensorNode.waypointImage
+                selectedNode.geometry?.firstMaterial?.diffuse.contents = sensorNode.lastDayImage
             }
         }
     }
@@ -257,11 +269,11 @@ class MainViewController: UIViewController {
             let regionIdentifier = "Geofence-\(annotation.coordinate.latitude)-\(annotation.coordinate.longitude)"
 
             for region in locationManager.monitoredRegions {
-                guard let circularRegion = region as? CLCircularRegion,
-                    circularRegion.identifier == regionIdentifier
-                    else { return }
+                guard let circularRegion = region as? CLCircularRegion else { return }
 
-                locationManager.stopMonitoring(for: circularRegion)
+                if circularRegion.identifier == regionIdentifier {
+                    locationManager.stopMonitoring(for: circularRegion)
+                }
             }
         }
     }
@@ -371,7 +383,7 @@ extension MainViewController: SceneLocationViewDelegate {
     func sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: SceneLocationView, node: LocationNode) {}
 
     func sceneLocationViewDidSetupSceneNode(sceneLocationView: SceneLocationView, sceneNode: SCNNode) {
-        fetchSensorsLiveData()
+        fetchLastDayReadings()
     }
 
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {}

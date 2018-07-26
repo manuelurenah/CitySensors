@@ -15,25 +15,24 @@ import SceneKit
 class SensorNode: LocationAnnotationNode {
 
     var sensor: UrbanObservatorySensor
+    var lastDaySensor: UrbanObservatorySensor
     var waypointImage = UIImage()
     var todayImage = UIImage()
+    var lastDayImage = UIImage()
     var isWaypoint = true
 
-    init(location: CLLocation?, sensor: UrbanObservatorySensor, isWaypoint: Bool) {
+    init(location: CLLocation?, sensor: UrbanObservatorySensor, lastDaySensor: UrbanObservatorySensor, isWaypoint: Bool) {
         self.sensor = sensor
+        self.lastDaySensor = lastDaySensor
         self.isWaypoint = isWaypoint
         self.todayImage = sensor.buildBillboardImage()
         self.waypointImage = sensor.buildWaypointImage()
+        self.lastDayImage = lastDaySensor.buildLastDayImage()
 
         super.init(location: location, image: isWaypoint ? self.waypointImage : self.todayImage)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    func toggleView() {
-        print("toggleView")
-        isWaypoint = !isWaypoint
     }
 }
