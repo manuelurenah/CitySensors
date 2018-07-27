@@ -9,8 +9,7 @@
 import Foundation
 
 enum APIConfig {
-    static let API_KEY = "coea8x3xajteanx9suaifwbqbea0ixrtu4flkob9mfrcmpf4prllvztsnuz1i4bbkimtugj1ejjzck49bpu85vylhx"
-    static let API_BASE_URL = "http://uoweb1.ncl.ac.uk/api/v1"
+    static let API_BASE_URL = "https://api.newcastle.urbanobservatory.ac.uk/api/v1"
 }
 
 enum Constants {
@@ -39,13 +38,13 @@ enum UserSettingsKeys {
     static let WEATHER = "Weather"
 
     static let INITIAL_SETUP = [
-        AIR_QUALITY: true,
-        BEE_HIVE: true,
+        AIR_QUALITY: false,
+        BEE_HIVE: false,
         ENVIRONMENTAL: true,
-        HIGH_PRECISION_AIR_MONITOR: true,
-        RIVER_LEVEL: true,
-        TIDAL_LEVEL: true,
-        TRAFFIC: true,
-        WEATHER: true,
+        HIGH_PRECISION_AIR_MONITOR: false,
+        RIVER_LEVEL: false,
+        TIDAL_LEVEL: false,
+        TRAFFIC: false,
+        WEATHER: false,
     ]
 }

@@ -10,7 +10,7 @@ import Foundation
 import Moya
 
 enum SensorService {
-    case getSensors(parameters: [String: Any])
+    case getRawSensorsData(parameters: [String: Any])
     case getLiveSensorData(parameters: [String: Any])
 }
 
@@ -26,7 +26,7 @@ extension SensorService: TargetType {
 
     var headers: [String: String]? {
         switch self {
-        case .getSensors,
+        case .getRawSensorsData,
              .getLiveSensorData:
             return ["Content-Type": "application/json"]
         }
@@ -34,7 +34,7 @@ extension SensorService: TargetType {
 
     var path: String {
         switch self {
-        case .getSensors:
+        case .getRawSensorsData:
             return "/sensors/data/raw.json"
         case .getLiveSensorData:
             return "/sensors/live.json"
@@ -43,7 +43,7 @@ extension SensorService: TargetType {
 
     var method: Moya.Method {
         switch self {
-        case .getSensors,
+        case .getRawSensorsData,
              .getLiveSensorData:
             return .get
         }
@@ -51,7 +51,7 @@ extension SensorService: TargetType {
 
     var task: Task {
         switch self {
-        case .getSensors(let parameters),
+        case .getRawSensorsData(let parameters),
              .getLiveSensorData(let parameters):
             return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
         }

@@ -46,7 +46,7 @@ class MainViewController: UIViewController {
     var sceneNeedsNodes = true
     var sceneNodes = [LocationNode]()
     var mapAnnotations = [MKAnnotation]()
-    var fetchSensorsDataTimer: Timer?
+    var fetchLiveSensorsDataTimer: Timer?
     var selectedNode: SensorNode?
 
     // MARK: - Lifecycle Methods
@@ -65,10 +65,9 @@ class MainViewController: UIViewController {
             showAlert(title: "Location Services", message: "CitySensors requires location services to work correctly")
         }
 
-        setupSceneView()
         setupMapView()
         setupLocationServices()
-//        fetchLastDayReadings()
+        setupSceneView()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -77,7 +76,9 @@ class MainViewController: UIViewController {
         sceneLocationView.run()
 
         if !lastDaySensors.isEmpty {
-            fetchSensorsDataTimer = startFetchTimer()
+            stopFetchTimer()
+            lastDaySensors.removeAll()
+            fetchLastDaySensorData()
         }
     }
 
@@ -86,8 +87,7 @@ class MainViewController: UIViewController {
 
         sceneLocationView.pause()
 
-        guard let timer = fetchSensorsDataTimer else { return }
-        timer.invalidate()
+        stopFetchTimer()
     }
 
     // MARK: - Class Methods
@@ -105,7 +105,7 @@ class MainViewController: UIViewController {
                 let shouldDisplayWaypoint = self.userLocation.distance(from: sensorLocation) > 100
                 let sensorNode = SensorNode(location: sensorLocation, sensor: sensor, lastDaySensor: self.lastDaySensors[index], isWaypoint: shouldDisplayWaypoint)
 
-                self.addRegionAndOverlay(for: sensorAnnotation, radius: Constants.DEFAULT_GEOFENCE_RADIUS)
+                self.startMonitoringGeofence(for: sensorAnnotation, radius: Constants.DEFAULT_GEOFENCE_RADIUS)
                 self.sceneNodes.append(sensorNode)
                 self.mapAnnotations.append(sensorAnnotation)
 
@@ -115,32 +115,18 @@ class MainViewController: UIViewController {
         }
     }
 
-    private func addRegionAndOverlay(for annotation: MKAnnotation, radius: Double) {
-        if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
-            showAlert(title:"Error", message: "Geofencing is not supported on this device!")
-            return
-        }
-
-        let region = CLCircularRegion(center: annotation.coordinate, radius: radius, identifier: "Geofence-\(annotation.coordinate.latitude)-\(annotation.coordinate.longitude)")
-        region.notifyOnExit = true
-        region.notifyOnEntry = true
-
-        mapView.add(MKCircle(center: annotation.coordinate, radius: radius))
-        locationManager.startMonitoring(for: region)
-    }
-
-    private func fetchLastDayReadings() {
-        print("fetching historical data")
+    private func fetchLastDaySensorData() {
         guard var parameters = getBaseParameters() else { return }
         let yesterday = Date().subtract(7.days).start(of: .day)
         parameters["start_time"] = yesterday.format(with: Constants.API_DATE_FORMAT)
         parameters["end_time"] = yesterday.end(of: .day).format(with: Constants.API_DATE_FORMAT)
 
-        ApiHandler.getSensorsData(with: parameters, onSuccess: { sensors in
-            print("got historical")
-            self.lastDaySensors = sensors
-            print(sensors)
-            self.fetchSensorsDataTimer = self.startFetchTimer()
+        print("fetching historic")
+        ApiHandler.getRawSensorsData(with: parameters, onSuccess: { sensors in
+            print("got historic")
+            self.lastDaySensors = sensors.sorted(by: { $0.name > $1.name })
+            self.fetchLiveSensorsData()
+            self.fetchLiveSensorsDataTimer = self.startFetchTimer()
         }, onError: { error in
             print(error)
 
@@ -149,18 +135,19 @@ class MainViewController: UIViewController {
         })
     }
 
-    @objc func fetchSensorsLiveData() {
-        print("fetching live data")
+    @objc func fetchLiveSensorsData() {
         if !lastDaySensors.isEmpty {
             guard let parameters = getBaseParameters() else { return }
 
-            ApiHandler.getLiveSensorData(with: parameters, onSuccess: { sensors in
+            print("fetching live")
+            ApiHandler.getLiveSensorsData(with: parameters, onSuccess: { sensors in
                 print("got live")
-                self.sensors = sensors
-                HUD.hide()
+                self.sensors = sensors.sorted(by: { $0.name > $1.name })
 
                 self.removeAllNodes()
                 self.addNodesToScene()
+
+                HUD.hide()
             }, onError: { error in
                 print(error)
 
@@ -190,7 +177,6 @@ class MainViewController: UIViewController {
         userLocation = currentLocation
 
          return [
-            "api_key": APIConfig.API_KEY,
             "buffer": "\(userLocation.coordinate.longitude),\(userLocation.coordinate.latitude),\(selectedRadius)",
             "sensor_type": selectedSensors.count > 0 ? selectedSensors.joined(separator: "-and-") : ""
         ]
@@ -200,7 +186,6 @@ class MainViewController: UIViewController {
         if sender.state == .ended {
             let sceneView = sender.view as! SceneLocationView
             let location = sender.location(in: sceneView)
-            print(location)
             let hitResults = sceneView.hitTest(location, options: nil)
 
             if !hitResults.isEmpty {
@@ -213,15 +198,17 @@ class MainViewController: UIViewController {
 
                 let selectedNode = firstResult.node
                 let sensorNode = selectedNode.parent as! SensorNode
-                selectedNode.geometry?.firstMaterial?.diffuse.contents = sensorNode.lastDayImage
+                let currentContent = selectedNode.geometry?.firstMaterial?.diffuse.contents as! UIImage
+                if (currentContent == sensorNode.todayImage) {
+                    selectedNode.geometry?.firstMaterial?.diffuse.contents = sensorNode.lastDayImage
+                } else {
+                    selectedNode.geometry?.firstMaterial?.diffuse.contents = sensorNode.todayImage
+                }
             }
         }
     }
 
     private func removeAllNodes() {
-        stopMonitoringRegions(annotations: mapAnnotations)
-        mapView.removeAllOverlays()
-
         for node in sceneNodes {
             sceneLocationView.removeLocationNode(locationNode: node)
         }
@@ -229,6 +216,8 @@ class MainViewController: UIViewController {
         mapView.removeAnnotations(mapAnnotations)
         sceneNodes.removeAll()
         mapAnnotations.removeAll()
+        stopMonitoringGeofences(annotations: mapAnnotations)
+        mapView.removeAllOverlays()
     }
 
     private func resetSession() {
@@ -261,10 +250,29 @@ class MainViewController: UIViewController {
     }
 
     private func startFetchTimer() -> Timer {
-        return Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(MainViewController.fetchSensorsLiveData), userInfo: nil, repeats: true)
+        return Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(MainViewController.fetchLiveSensorsData), userInfo: nil, repeats: true)
     }
 
-    private func stopMonitoringRegions(annotations: [MKAnnotation]) {
+    private func startMonitoringGeofence(for annotation: MKAnnotation, radius: Double) {
+        if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
+            showAlert(title:"Error", message: "Geofencing is not supported on this device!")
+            return
+        }
+
+        let region = CLCircularRegion(center: annotation.coordinate, radius: radius, identifier: "Geofence-\(annotation.coordinate.latitude)-\(annotation.coordinate.longitude)")
+        region.notifyOnExit = true
+        region.notifyOnEntry = true
+
+        mapView.add(MKCircle(center: annotation.coordinate, radius: radius))
+        locationManager.startMonitoring(for: region)
+    }
+
+    private func stopFetchTimer() {
+        guard let timer = fetchLiveSensorsDataTimer else { return }
+        timer.invalidate()
+    }
+
+    private func stopMonitoringGeofences(annotations: [MKAnnotation]) {
         for annotation in annotations {
             let regionIdentifier = "Geofence-\(annotation.coordinate.latitude)-\(annotation.coordinate.longitude)"
 
@@ -282,11 +290,7 @@ class MainViewController: UIViewController {
 // MARK: - IBActions Methods
 extension MainViewController {
     @IBAction func unwindAndCloseSettings(_ segue: UIStoryboardSegue) {}
-
-    @IBAction func unwindAndSaveSettings(_ segue: UIStoryboardSegue) {
-        removeAllNodes()
-        fetchSensorsLiveData()
-    }
+    @IBAction func unwindAndSaveSettings(_ segue: UIStoryboardSegue) {}
 }
 
 // MARK: - CLLocationManagerDelegate
@@ -383,7 +387,7 @@ extension MainViewController: SceneLocationViewDelegate {
     func sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: SceneLocationView, node: LocationNode) {}
 
     func sceneLocationViewDidSetupSceneNode(sceneLocationView: SceneLocationView, sceneNode: SCNNode) {
-        fetchLastDayReadings()
+        fetchLastDaySensorData()
     }
 
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {}
