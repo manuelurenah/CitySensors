@@ -5,7 +5,6 @@ PODS:
   - ChameleonFramework/Swift (2.1.0):
     - ChameleonFramework/Default
   - DateToolsSwift (4.0.0)
-  - HDAugmentedReality (2.3.0)
   - Moya/Core (11.0.2):
     - Alamofire (~> 4.1)
     - Result (~> 3.0)
@@ -40,7 +39,6 @@ DEPENDENCIES:
   - ARCL (~> 1.0)
   - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`)
   - DateToolsSwift (~> 4.0)
-  - HDAugmentedReality (~> 2.3)
   - Moya/RxSwift (~> 11.0)
   - PKHUD (~> 5.0)
   - RxCocoa (~> 4.0)
@@ -53,7 +51,6 @@ SPEC REPOS:
     - Alamofire
     - ARCL
     - DateToolsSwift
-    - HDAugmentedReality
     - Moya
     - PKHUD
     - Result
@@ -76,7 +73,6 @@ SPEC CHECKSUMS:
   ARCL: 5fd2b0d7aabf91f15dbc0e8c510b25516b8a755a
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   DateToolsSwift: 875d97ff9e3a5d54abdd67a269b3f51c757b71ab
-  HDAugmentedReality: 2ea96cb488aa81298e6557a897b4252d62e55843
   Moya: a725035953bc1c0eb1be505ab903984501d82440
   PKHUD: 62ea46a1e88c4def1da784878d199bb54c841e3c
   Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
@@ -85,6 +81,6 @@ SPEC CHECKSUMS:
   SwifterSwift: 1ce0e31801ddd3a2bd3256626275425adb01067a
   UIImageColors: 3ae0150e539342697808281a3975fe5dec2024ce
 
-PODFILE CHECKSUM: c8eb9785acc7747342104bb1308cc07fce71cd87
+PODFILE CHECKSUM: b69df64e76061040ef8f22b3b893871430d88456
 
 COCOAPODS: 1.5.3

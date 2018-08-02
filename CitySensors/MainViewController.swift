@@ -47,7 +47,6 @@ class MainViewController: UIViewController {
     var sceneNodes = [LocationNode]()
     var mapAnnotations = [MKAnnotation]()
     var fetchLiveSensorsDataTimer: Timer?
-    var selectedNode: SensorNode?
 
     // MARK: - Lifecycle Methods
     override func viewDidLoad() {
