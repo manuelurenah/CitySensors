@@ -33,7 +33,7 @@ PODS:
   - SwifterSwift/SpriteKit (4.4.0)
   - SwifterSwift/SwiftStdlib (4.4.0)
   - SwifterSwift/UIKit (4.4.0)
-  - UIImageColors (2.0.0)
+  - UIImageColors (2.0.1)
 
 DEPENDENCIES:
   - ARCL (~> 1.0)
@@ -79,7 +79,7 @@ SPEC CHECKSUMS:
   RxCocoa: 0b54909c902e1e581212a03e690bbd94032d8baa
   RxSwift: 99e10317ddfcc7fbe01356aafd118fde4a0be104
   SwifterSwift: 1ce0e31801ddd3a2bd3256626275425adb01067a
-  UIImageColors: 3ae0150e539342697808281a3975fe5dec2024ce
+  UIImageColors: c83669aff7ceb55a3b3f2c398f3b5c14632a267b
 
 PODFILE CHECKSUM: b69df64e76061040ef8f22b3b893871430d88456
 

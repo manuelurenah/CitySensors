@@ -143,7 +143,7 @@ class UrbanObservatorySensor: Codable {
         return waypointView.takeSnapshot()
     }
 
-    func buildLastDayImage() -> UIImage {
+    func buildLastWeekImage() -> UIImage {
         let averageReading = getAverageReadings()
         let billboardView: BillboardView = BillboardView.fromNib()
 
@@ -151,7 +151,7 @@ class UrbanObservatorySensor: Codable {
         billboardView.sensorType = type
         billboardView.iconImageView.image = UIImage(named: type)
         billboardView.readingsLabel.text = getReadings(values: averageReading)
-        billboardView.latestReadingLabel.text = "Yesterday"
+        billboardView.latestReadingLabel.text = "Last Week"
 
         return billboardView.takeSnapshot()
     }

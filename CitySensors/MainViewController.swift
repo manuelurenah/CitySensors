@@ -41,12 +41,12 @@ class MainViewController: UIViewController {
 
     var userLocation = CLLocation()
     var sensors = [UrbanObservatorySensor]()
-    var lastDaySensors = [UrbanObservatorySensor]()
+    var lastWeekSensors = [UrbanObservatorySensor]()
     var isSceneReady = false
     var sceneNeedsNodes = true
-    var sceneNodes = [LocationNode]()
+    var sceneNodes = [SensorNode]()
     var mapAnnotations = [MKAnnotation]()
-    var fetchLiveSensorsDataTimer: Timer?
+    var fetchSensorsDataTimer: Timer?
 
     // MARK: - Lifecycle Methods
     override func viewDidLoad() {
@@ -74,10 +74,10 @@ class MainViewController: UIViewController {
 
         sceneLocationView.run()
 
-        if !lastDaySensors.isEmpty {
+        if !lastWeekSensors.isEmpty {
+            lastWeekSensors.removeAll()
             stopFetchTimer()
-            lastDaySensors.removeAll()
-            fetchLastDaySensorData()
+            fetchLastWeekSensorData()
         }
     }
 
@@ -91,7 +91,7 @@ class MainViewController: UIViewController {
 
     // MARK: - Class Methods
     private func addNodesToScene() {
-        for (index, sensor) in sensors.enumerated() {
+        for sensor in sensors {
             DispatchQueue.main.async {
                 let sensorImage = UIImage(named: sensor.type)!
                 let sensorName = sensor.source.webDisplayName
@@ -101,8 +101,14 @@ class MainViewController: UIViewController {
                 let sensorCoordinates = CLLocationCoordinate2D(latitude: sensor.geometry.coordinates[1], longitude: sensor.geometry.coordinates[0])
                 let sensorAnnotation = SensorAnnotation(title: sensor.type, coordinate: sensorCoordinates, sensorName: sensorName, sensorType: sensor.type, image: sensorImage)
                 let sensorLocation = CLLocation(coordinate: sensorCoordinates, altitude: sensorHeight)
-                let shouldDisplayWaypoint = self.userLocation.distance(from: sensorLocation) > 100
-                let sensorNode = SensorNode(location: sensorLocation, sensor: sensor, lastDaySensor: self.lastDaySensors[index], isWaypoint: shouldDisplayWaypoint)
+                let shouldDisplayWaypoint = self.userLocation.distance(from: sensorLocation) > 20
+                let sensorNode = SensorNode(location: sensorLocation, sensor: sensor, isWaypoint: shouldDisplayWaypoint)
+
+                for lastWeekSensor in self.lastWeekSensors {
+                    if sensor.name == lastWeekSensor.name {
+                        sensorNode.lastWeekSensor = lastWeekSensor
+                    }
+                }
 
                 self.startMonitoringGeofence(for: sensorAnnotation, radius: Constants.DEFAULT_GEOFENCE_RADIUS)
                 self.sceneNodes.append(sensorNode)
@@ -114,18 +120,16 @@ class MainViewController: UIViewController {
         }
     }
 
-    private func fetchLastDaySensorData() {
+    @objc
+    private func fetchLastWeekSensorData() {
         guard var parameters = getBaseParameters() else { return }
-        let yesterday = Date().subtract(7.days).start(of: .day)
+        let yesterday = Date().subtract(1.weeks).start(of: .day)
         parameters["start_time"] = yesterday.format(with: Constants.API_DATE_FORMAT)
         parameters["end_time"] = yesterday.end(of: .day).format(with: Constants.API_DATE_FORMAT)
 
-        print("fetching historic")
         ApiHandler.getRawSensorsData(with: parameters, onSuccess: { sensors in
-            print("got historic")
-            self.lastDaySensors = sensors.sorted(by: { $0.name > $1.name })
+            self.lastWeekSensors = sensors.sorted(by: { $0.name > $1.name })
             self.fetchLiveSensorsData()
-            self.fetchLiveSensorsDataTimer = self.startFetchTimer()
         }, onError: { error in
             print(error)
 
@@ -134,17 +138,18 @@ class MainViewController: UIViewController {
         })
     }
 
-    @objc func fetchLiveSensorsData() {
-        if !lastDaySensors.isEmpty {
+    func fetchLiveSensorsData() {
+        if !lastWeekSensors.isEmpty {
             guard let parameters = getBaseParameters() else { return }
 
-            print("fetching live")
             ApiHandler.getLiveSensorsData(with: parameters, onSuccess: { sensors in
-                print("got live")
                 self.sensors = sensors.sorted(by: { $0.name > $1.name })
 
                 self.removeAllNodes()
                 self.addNodesToScene()
+
+                self.stopFetchTimer()
+                self.fetchSensorsDataTimer = self.startFetchTimer()
 
                 HUD.hide()
             }, onError: { error in
@@ -181,27 +186,26 @@ class MainViewController: UIViewController {
         ]
     }
 
-    @objc private func handleSceneViewTap(sender: UITapGestureRecognizer) {
+    @objc
+    private func handleSceneViewTap(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             let sceneView = sender.view as! SceneLocationView
             let location = sender.location(in: sceneView)
             let hitResults = sceneView.hitTest(location, options: nil)
 
             if !hitResults.isEmpty {
-                print("Got some hit results")
-                guard let firstResult = hitResults.first
-                else {
-                    print("could not get first")
-                    return
-                }
+                guard let firstResult = hitResults.first else { return }
 
                 let selectedNode = firstResult.node
                 let sensorNode = selectedNode.parent as! SensorNode
                 let currentContent = selectedNode.geometry?.firstMaterial?.diffuse.contents as! UIImage
-                if (currentContent == sensorNode.todayImage) {
-                    selectedNode.geometry?.firstMaterial?.diffuse.contents = sensorNode.lastDayImage
-                } else {
-                    selectedNode.geometry?.firstMaterial?.diffuse.contents = sensorNode.todayImage
+
+                if sensorNode.lastWeekSensor != nil {
+                    if currentContent == sensorNode.todayImage {
+                        selectedNode.geometry?.firstMaterial?.diffuse.contents = sensorNode.lastWeekImage
+                    } else if currentContent == sensorNode.lastWeekImage {
+                        selectedNode.geometry?.firstMaterial?.diffuse.contents = sensorNode.todayImage
+                    }
                 }
             }
         }
@@ -249,7 +253,7 @@ class MainViewController: UIViewController {
     }
 
     private func startFetchTimer() -> Timer {
-        return Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(MainViewController.fetchLiveSensorsData), userInfo: nil, repeats: true)
+        return Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(MainViewController.fetchLastWeekSensorData), userInfo: nil, repeats: true)
     }
 
     private func startMonitoringGeofence(for annotation: MKAnnotation, radius: Double) {
@@ -267,7 +271,7 @@ class MainViewController: UIViewController {
     }
 
     private func stopFetchTimer() {
-        guard let timer = fetchLiveSensorsDataTimer else { return }
+        guard let timer = fetchSensorsDataTimer else { return }
         timer.invalidate()
     }
 
@@ -386,7 +390,7 @@ extension MainViewController: SceneLocationViewDelegate {
     func sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: SceneLocationView, node: LocationNode) {}
 
     func sceneLocationViewDidSetupSceneNode(sceneLocationView: SceneLocationView, sceneNode: SCNNode) {
-        fetchLastDaySensorData()
+        fetchLastWeekSensorData()
     }
 
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {}

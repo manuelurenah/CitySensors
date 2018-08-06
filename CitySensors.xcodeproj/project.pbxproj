@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		8D055B0020E99825002A1FE0 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D055AFF20E99825002A1FE0 /* UIView+Extension.swift */; };
 		8D09FE7420C09C6500B01741 /* SettingsContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D09FE7320C09C6500B01741 /* SettingsContainerViewController.swift */; };
-		8D26A39A20A35C2D009E66F2 /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 8D26A39920A35C2D009E66F2 /* .gitkeep */; };
 		8D4770B320AC393000934AE0 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4770B220AC393000934AE0 /* MainViewController.swift */; };
 		8D5C66C220A464D200A4E805 /* UrbanObservatorySensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C120A464D200A4E805 /* UrbanObservatorySensor.swift */; };
 		8D5C66C420A4680B00A4E805 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C320A4680B00A4E805 /* Constants.swift */; };
@@ -36,7 +35,6 @@
 		1501DA499FD90DF5AB36ECD8 /* Pods-CitySensors.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CitySensors.release.xcconfig"; path = "Pods/Target Support Files/Pods-CitySensors/Pods-CitySensors.release.xcconfig"; sourceTree = "<group>"; };
 		8D055AFF20E99825002A1FE0 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		8D09FE7320C09C6500B01741 /* SettingsContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsContainerViewController.swift; sourceTree = "<group>"; };
-		8D26A39920A35C2D009E66F2 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		8D4770B220AC393000934AE0 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		8D5C66C120A464D200A4E805 /* UrbanObservatorySensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrbanObservatorySensor.swift; sourceTree = "<group>"; };
 		8D5C66C320A4680B00A4E805 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -94,27 +92,19 @@
 		8D1B068020A26863007FAC3E /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				8D5C66C120A464D200A4E805 /* UrbanObservatorySensor.swift */,
 				8DCBDDDF20E3F47C001E4B3E /* SensorAnnotation.swift */,
 				8DEF517120E4584A0075461F /* SensorMarkerView.swift */,
+				8D5C66C120A464D200A4E805 /* UrbanObservatorySensor.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		8D1B068120A26869007FAC3E /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				8D26A39920A35C2D009E66F2 /* .gitkeep */,
-			);
-			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		8D1B068220A26874007FAC3E /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				8D5C66C320A4680B00A4E805 /* Constants.swift */,
-				8D9696B620B4322E005067BB /* String+Extension.swift */,
 				8DCBDDE120E3F8BB001E4B3E /* MKMapView+Extension.swift */,
+				8D9696B620B4322E005067BB /* String+Extension.swift */,
 				8D055AFF20E99825002A1FE0 /* UIView+Extension.swift */,
 			);
 			path = Helpers;
@@ -159,7 +149,6 @@
 				8D1B068020A26863007FAC3E /* Models */,
 				8DEF4C3C20A49061009E3791 /* Network */,
 				8DEF4C4020A493EE009E3791 /* Supporting */,
-				8D1B068120A26869007FAC3E /* ViewModels */,
 				8DF868B920BF075900308AED /* Views */,
 			);
 			path = CitySensors;
@@ -177,8 +166,8 @@
 		8DEF4C3F20A493E4009E3791 /* Interfaces */ = {
 			isa = PBXGroup;
 			children = (
-				8DBC498E20A24757006756C3 /* Main.storyboard */,
 				8DBC499320A24758006756C3 /* LaunchScreen.storyboard */,
+				8DBC498E20A24757006756C3 /* Main.storyboard */,
 			);
 			path = Interfaces;
 			sourceTree = "<group>";
@@ -186,8 +175,8 @@
 		8DEF4C4020A493EE009E3791 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
-				8DBC498A20A24757006756C3 /* AppDelegate.swift */,
 				8DBC499620A24758006756C3 /* Info.plist */,
+				8DBC498A20A24757006756C3 /* AppDelegate.swift */,
 			);
 			path = Supporting;
 			sourceTree = "<group>";
@@ -265,7 +254,6 @@
 			files = (
 				8DBC499520A24758006756C3 /* LaunchScreen.storyboard in Resources */,
 				8DBE606720E531B000526983 /* WaypointView.xib in Resources */,
-				8D26A39A20A35C2D009E66F2 /* .gitkeep in Resources */,
 				8DF868BD20BF07CF00308AED /* BillboardView.xib in Resources */,
 				8DC29C7E20E6A03E0041680D /* Assets.xcassets in Resources */,
 				8DBC499020A24757006756C3 /* Main.storyboard in Resources */,

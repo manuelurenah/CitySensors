@@ -15,19 +15,32 @@ import SceneKit
 class SensorNode: LocationAnnotationNode {
 
     var sensor: UrbanObservatorySensor
-    var lastDaySensor: UrbanObservatorySensor
     var waypointImage = UIImage()
     var todayImage = UIImage()
-    var lastDayImage = UIImage()
+    var lastWeekImage = UIImage()
     var isWaypoint = true
+    var lastWeekSensor: UrbanObservatorySensor? {
+        didSet {
+            lastWeekImage = lastWeekSensor!.buildLastWeekImage()
+        }
+    }
 
-    init(location: CLLocation?, sensor: UrbanObservatorySensor, lastDaySensor: UrbanObservatorySensor, isWaypoint: Bool) {
+    init(location: CLLocation?, sensor: UrbanObservatorySensor, isWaypoint: Bool) {
         self.sensor = sensor
-        self.lastDaySensor = lastDaySensor
         self.isWaypoint = isWaypoint
         self.todayImage = sensor.buildBillboardImage()
         self.waypointImage = sensor.buildWaypointImage()
-        self.lastDayImage = lastDaySensor.buildLastDayImage()
+
+        super.init(location: location, image: isWaypoint ? self.waypointImage : self.todayImage)
+    }
+
+    init(location: CLLocation?, sensor: UrbanObservatorySensor, isWaypoint: Bool, lastWeekSensor: UrbanObservatorySensor) {
+        self.sensor = sensor
+        self.lastWeekSensor = lastWeekSensor
+        self.isWaypoint = isWaypoint
+        self.todayImage = sensor.buildBillboardImage()
+        self.waypointImage = sensor.buildWaypointImage()
+        self.lastWeekImage = lastWeekSensor.buildLastWeekImage()
 
         super.init(location: location, image: isWaypoint ? self.waypointImage : self.todayImage)
     }
