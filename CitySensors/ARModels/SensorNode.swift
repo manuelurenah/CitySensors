@@ -17,11 +17,11 @@ class SensorNode: LocationAnnotationNode {
     var sensor: UrbanObservatorySensor
     var waypointImage = UIImage()
     var todayImage = UIImage()
-    var lastWeekImage = UIImage()
+    var historicalImage = UIImage()
     var isWaypoint = true
-    var lastWeekSensor: UrbanObservatorySensor? {
+    var historicalSensor: UrbanObservatorySensor? {
         didSet {
-            lastWeekImage = lastWeekSensor!.buildLastWeekImage()
+            historicalImage = historicalSensor!.buildHistoricalImage()
         }
     }
 
@@ -34,13 +34,13 @@ class SensorNode: LocationAnnotationNode {
         super.init(location: location, image: isWaypoint ? self.waypointImage : self.todayImage)
     }
 
-    init(location: CLLocation?, sensor: UrbanObservatorySensor, isWaypoint: Bool, lastWeekSensor: UrbanObservatorySensor) {
+    init(location: CLLocation?, sensor: UrbanObservatorySensor, isWaypoint: Bool, historicalSensor: UrbanObservatorySensor) {
         self.sensor = sensor
-        self.lastWeekSensor = lastWeekSensor
+        self.historicalSensor = historicalSensor
         self.isWaypoint = isWaypoint
         self.todayImage = sensor.buildBillboardImage()
         self.waypointImage = sensor.buildWaypointImage()
-        self.lastWeekImage = lastWeekSensor.buildLastWeekImage()
+        self.historicalImage = historicalSensor.buildHistoricalImage()
 
         super.init(location: location, image: isWaypoint ? self.waypointImage : self.todayImage)
     }

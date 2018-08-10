@@ -41,7 +41,7 @@ class MainViewController: UIViewController {
 
     var userLocation = CLLocation()
     var sensors = [UrbanObservatorySensor]()
-    var lastWeekSensors = [UrbanObservatorySensor]()
+    var historicalSensors = [UrbanObservatorySensor]()
     var isSceneReady = false
     var sceneNeedsNodes = true
     var sceneNodes = [SensorNode]()
@@ -53,7 +53,7 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
 
         self.setStatusBarStyle(UIStatusBarStyleContrast)
-        HUD.show(.progress, onView: self.view)
+        HUD.show(.labeledProgress(title: nil, subtitle: "Fetching Sensors"), onView: self.view)
 
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
@@ -73,12 +73,6 @@ class MainViewController: UIViewController {
         super.viewWillAppear(animated)
 
         sceneLocationView.run()
-
-        if !lastWeekSensors.isEmpty {
-            lastWeekSensors.removeAll()
-            stopFetchTimer()
-            fetchLastWeekSensorData()
-        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -104,9 +98,9 @@ class MainViewController: UIViewController {
                 let shouldDisplayWaypoint = self.userLocation.distance(from: sensorLocation) > 20
                 let sensorNode = SensorNode(location: sensorLocation, sensor: sensor, isWaypoint: shouldDisplayWaypoint)
 
-                for lastWeekSensor in self.lastWeekSensors {
-                    if sensor.name == lastWeekSensor.name {
-                        sensorNode.lastWeekSensor = lastWeekSensor
+                for historicalSensor in self.historicalSensors {
+                    if sensor.name == historicalSensor.name {
+                        sensorNode.historicalSensor = historicalSensor
                     }
                 }
 
@@ -121,14 +115,14 @@ class MainViewController: UIViewController {
     }
 
     @objc
-    private func fetchLastWeekSensorData() {
+    private func fetchHistoricalSensorData() {
         guard var parameters = getBaseParameters() else { return }
-        let yesterday = Date().subtract(1.weeks).start(of: .day)
+        let yesterday = Date().subtract(1.days).start(of: .day)
         parameters["start_time"] = yesterday.format(with: Constants.API_DATE_FORMAT)
         parameters["end_time"] = yesterday.end(of: .day).format(with: Constants.API_DATE_FORMAT)
 
         ApiHandler.getRawSensorsData(with: parameters, onSuccess: { sensors in
-            self.lastWeekSensors = sensors.sorted(by: { $0.name > $1.name })
+            self.historicalSensors = sensors.sorted(by: { $0.name > $1.name })
             self.fetchLiveSensorsData()
         }, onError: { error in
             print(error)
@@ -139,28 +133,24 @@ class MainViewController: UIViewController {
     }
 
     func fetchLiveSensorsData() {
-        if !lastWeekSensors.isEmpty {
-            guard let parameters = getBaseParameters() else { return }
+        guard let parameters = getBaseParameters() else { return }
 
-            ApiHandler.getLiveSensorsData(with: parameters, onSuccess: { sensors in
-                self.sensors = sensors.sorted(by: { $0.name > $1.name })
+        ApiHandler.getLiveSensorsData(with: parameters, onSuccess: { sensors in
+            self.sensors = sensors.sorted(by: { $0.name > $1.name })
 
-                self.removeAllNodes()
-                self.addNodesToScene()
+            self.removeAllNodes()
+            self.addNodesToScene()
 
-                self.stopFetchTimer()
-                self.fetchSensorsDataTimer = self.startFetchTimer()
+            self.stopFetchTimer()
+            self.fetchSensorsDataTimer = self.startFetchTimer()
 
-                HUD.hide()
-            }, onError: { error in
-                print(error)
+            HUD.hide()
+        }, onError: { error in
+            print(error)
 
-                HUD.hide()
-                self.showAlert(title: "Error", message: "An error occured while fetching live data: \(error.localizedDescription)")
-            })
-        } else {
-            print("still empty")
-        }
+            HUD.hide()
+            self.showAlert(title: "Error", message: "An error occured while fetching live data: \(error.localizedDescription)")
+        })
     }
 
     private func getBaseParameters() -> [String: Any]? {
@@ -200,10 +190,10 @@ class MainViewController: UIViewController {
                 let sensorNode = selectedNode.parent as! SensorNode
                 let currentContent = selectedNode.geometry?.firstMaterial?.diffuse.contents as! UIImage
 
-                if sensorNode.lastWeekSensor != nil {
+                if sensorNode.historicalSensor != nil {
                     if currentContent == sensorNode.todayImage {
-                        selectedNode.geometry?.firstMaterial?.diffuse.contents = sensorNode.lastWeekImage
-                    } else if currentContent == sensorNode.lastWeekImage {
+                        selectedNode.geometry?.firstMaterial?.diffuse.contents = sensorNode.historicalImage
+                    } else if currentContent == sensorNode.historicalImage {
                         selectedNode.geometry?.firstMaterial?.diffuse.contents = sensorNode.todayImage
                     }
                 }
@@ -253,7 +243,7 @@ class MainViewController: UIViewController {
     }
 
     private func startFetchTimer() -> Timer {
-        return Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(MainViewController.fetchLastWeekSensorData), userInfo: nil, repeats: true)
+        return Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(MainViewController.fetchHistoricalSensorData), userInfo: nil, repeats: true)
     }
 
     private func startMonitoringGeofence(for annotation: MKAnnotation, radius: Double) {
@@ -293,7 +283,12 @@ class MainViewController: UIViewController {
 // MARK: - IBActions Methods
 extension MainViewController {
     @IBAction func unwindAndCloseSettings(_ segue: UIStoryboardSegue) {}
-    @IBAction func unwindAndSaveSettings(_ segue: UIStoryboardSegue) {}
+    @IBAction func unwindAndSaveSettings(_ segue: UIStoryboardSegue) {
+        if isSceneReady {
+            HUD.show(.labeledProgress(title: nil, subtitle: "Updating Scene"), onView: self.view)
+            fetchHistoricalSensorData()
+        }
+    }
 }
 
 // MARK: - CLLocationManagerDelegate
@@ -390,26 +385,9 @@ extension MainViewController: SceneLocationViewDelegate {
     func sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: SceneLocationView, node: LocationNode) {}
 
     func sceneLocationViewDidSetupSceneNode(sceneLocationView: SceneLocationView, sceneNode: SCNNode) {
-        fetchLastWeekSensorData()
+        isSceneReady = true
+        fetchHistoricalSensorData()
     }
 
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {}
-}
-
-// MARK: - ARSCNViewDelegate
-extension MainViewController: ARSCNViewDelegate {
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        showAlert(title: "Error", message: "An error ocurred while setting the AR session: \(error.localizedDescription)")
-
-        if let sessionError = error as? ARError {
-            switch sessionError.errorCode {
-            case 102:
-                sceneLocationView.orientToTrueNorth = false
-                resetSession()
-            default:
-                sceneLocationView.orientToTrueNorth = true
-                resetSession()
-            }
-        }
-    }
 }
