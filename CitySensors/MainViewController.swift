@@ -17,7 +17,6 @@ import ChameleonFramework
 import DateToolsSwift
 import PKHUD
 import SwifterSwift
-import UIImageColors
 
 class MainViewController: UIViewController {
 

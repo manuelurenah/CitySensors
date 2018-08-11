@@ -8,11 +8,9 @@
 
 import Foundation
 import Moya
-import RxSwift
 
 class ApiHandler {
     private static let provider = MoyaProvider<SensorService>()
-    private static let disposeBag = DisposeBag()
 
     private static func decodeSensors(sensorData: Data) -> [UrbanObservatorySensor] {
         var sensors = [UrbanObservatorySensor]()
@@ -33,28 +31,28 @@ class ApiHandler {
     }
 
     static func getLiveSensorsData(with parameters: [String: Any], onSuccess: @escaping ([UrbanObservatorySensor])->(), onError: @escaping (Error)->()) {
-        provider.rx.request(.getLiveSensorData(parameters: parameters)).subscribe { event in
+        provider.request(.getLiveSensorData(parameters: parameters)) { event in
             switch event {
             case let .success(response):
                 let sensors = decodeSensors(sensorData: response.data)
 
                 onSuccess(sensors)
-            case let .error(error):
+            case let .failure(error):
                 onError(error)
             }
-        }.disposed(by: disposeBag)
+        }
     }
 
     static func getRawSensorsData(with parameters: [String: Any], onSuccess: @escaping ([UrbanObservatorySensor])->(), onError: @escaping (Error)->()) {
-        provider.rx.request(.getRawSensorsData(parameters: parameters)).subscribe { event in
+        provider.request(.getRawSensorsData(parameters: parameters)) { event in
             switch event {
             case let .success(response):
                 let sensors = decodeSensors(sensorData: response.data)
 
                 onSuccess(sensors)
-            case let .error(error):
+            case let .failure(error):
                 onError(error)
             }
-        }.disposed(by: disposeBag)
+        }
     }
 }
