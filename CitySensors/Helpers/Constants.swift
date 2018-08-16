@@ -17,7 +17,7 @@ enum Constants {
     static let API_DATE_FORMAT = "yyyyMMddHHmmss"
 
     static let DEFAULT_RADIUS = 100
-    static let DEFAULT_SENSOR_HEIGHT = 50.0
+    static let DEFAULT_SENSOR_HEIGHT = 55.0
     static let DEFAULT_GEOFENCE_RADIUS = 20.0
     static let INITIAL_COORDINATES = [
         "latitude": 55.002352,

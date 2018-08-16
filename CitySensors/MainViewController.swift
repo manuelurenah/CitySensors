@@ -205,16 +205,12 @@ class MainViewController: UIViewController {
             sceneLocationView.removeLocationNode(locationNode: node)
         }
 
+        sceneLocationView.resetSession()
         mapView.removeAnnotations(mapAnnotations)
         sceneNodes.removeAll()
         mapAnnotations.removeAll()
         stopMonitoringGeofences(annotations: mapAnnotations)
         mapView.removeAllOverlays()
-    }
-
-    private func resetSession() {
-        sceneLocationView.pause()
-        sceneLocationView.run()
     }
 
     private func setupLocationServices() {
@@ -285,6 +281,7 @@ extension MainViewController {
     @IBAction func unwindAndSaveSettings(_ segue: UIStoryboardSegue) {
         if isSceneReady {
             HUD.show(.labeledProgress(title: nil, subtitle: "Updating Scene"), onView: self.view)
+            sceneLocationView.resetSession()
             fetchHistoricalSensorData()
         }
     }

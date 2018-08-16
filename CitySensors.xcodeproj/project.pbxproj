@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8D055B0020E99825002A1FE0 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D055AFF20E99825002A1FE0 /* UIView+Extension.swift */; };
 		8D09FE7420C09C6500B01741 /* SettingsContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D09FE7320C09C6500B01741 /* SettingsContainerViewController.swift */; };
+		8D10BF222124434400A35192 /* SceneLocationView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D10BF212124434400A35192 /* SceneLocationView+Extension.swift */; };
 		8D4770B320AC393000934AE0 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4770B220AC393000934AE0 /* MainViewController.swift */; };
 		8D5C66C220A464D200A4E805 /* UrbanObservatorySensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C120A464D200A4E805 /* UrbanObservatorySensor.swift */; };
 		8D5C66C420A4680B00A4E805 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C66C320A4680B00A4E805 /* Constants.swift */; };
@@ -35,6 +36,7 @@
 		1501DA499FD90DF5AB36ECD8 /* Pods-CitySensors.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CitySensors.release.xcconfig"; path = "Pods/Target Support Files/Pods-CitySensors/Pods-CitySensors.release.xcconfig"; sourceTree = "<group>"; };
 		8D055AFF20E99825002A1FE0 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		8D09FE7320C09C6500B01741 /* SettingsContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsContainerViewController.swift; sourceTree = "<group>"; };
+		8D10BF212124434400A35192 /* SceneLocationView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneLocationView+Extension.swift"; sourceTree = "<group>"; };
 		8D4770B220AC393000934AE0 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		8D5C66C120A464D200A4E805 /* UrbanObservatorySensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrbanObservatorySensor.swift; sourceTree = "<group>"; };
 		8D5C66C320A4680B00A4E805 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				8DCBDDE120E3F8BB001E4B3E /* MKMapView+Extension.swift */,
 				8D9696B620B4322E005067BB /* String+Extension.swift */,
 				8D055AFF20E99825002A1FE0 /* UIView+Extension.swift */,
+				8D10BF212124434400A35192 /* SceneLocationView+Extension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 				8D9696BA20B44C96005067BB /* SensorNode.swift in Sources */,
 				8D9696B720B4322E005067BB /* String+Extension.swift in Sources */,
 				8DBC498D20A24757006756C3 /* SettingsViewController.swift in Sources */,
+				8D10BF222124434400A35192 /* SceneLocationView+Extension.swift in Sources */,
 				8D055B0020E99825002A1FE0 /* UIView+Extension.swift in Sources */,
 				8DE2EBC420A4FF6200B94D0F /* ApiHandler.swift in Sources */,
 				8D5C66C220A464D200A4E805 /* UrbanObservatorySensor.swift in Sources */,
